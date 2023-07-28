@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>背景圖片網站示範</title>
+  <style>
+    body {
+      background-image: url("https://wallpapercave.com/wp/wp2586787.jpg");
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 24px;
+      text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 50px;
+      margin-bottom: 20px;
+    }
+
+    .centered {
+      text-align: center;
+    }
+
+    .discord-yt {
+      display: flex;
+      justify-content: space-between;
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 320px;
+    }
+
+    .discord,
+    .youtube {
+      display: flex;
+      align-items: center;
+      color: white;
+      text-decoration: none;
+      font-size: 8px;
+      padding: 2px 16px;
+      border: 1px solid white;
+      border-radius: 8px;
+    }
+
+    .discord img,
+    .youtube img {
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+    }
+
+    .button {
+      display: block;
+      background-color: transparent;
+      color: white;
+      border: 1px solid white;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 0 auto;
+    }
+
+    .rectangle-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 50px;
+    }
+
+    .rectangle {
+      width: 200px;
+      height: 300px;
+      background-color: lightgray;
+      margin: 10px;
+      border: 2px solid black;
+      border-radius: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .generator-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .generator {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      border: 2px solid black;
+      border-radius: 20px;
+    }
+
+    .generator img {
+      width: 60px;
+      height: 60px;
+      margin-right: 10px;
+    }
+    /* 可以添加其他樣式以美化網站 */
+  </style>
+</head>
+<body>
+  <!-- 背景音樂 -->
+  <audio id="bgMusic" loop>
+    <source src="https://static.wikia.nocookie.net/minecraft_zh_gamepedia/images/b/b1/Strad.ogg/revision/latest?cb=20120321225621" type="audio/ogg">
+	<source src="https://static.wikia.nocookie.net/minecraft_zh_gamepedia/images/0/01/Pigstep.ogg/revision/latest?cb=20200416011114" type="audio/ogg">
+    <!-- 如果你有多種格式的音樂，可以在這裡添加多個<source>標籤，瀏覽器將自動選擇支援的格式。 -->
+  </audio>
+
+  <div class="centered">
+    <div class="title" id="title">歡迎來到 Ericbob 的網站！</div>
+    <!-- 按鈕，按下時播放音樂 -->
+    <button class="button" onclick="playMusic()" id="playButton">你想要去哪裡？</button>
+  </div>
+
+  <!-- 當按鈕被按下時，在下方生成三個長方形 -->
+  <div class="rectangle-container" id="rectangleContainer" style="display: none;">
+    <div class="rectangle">
+      <a class="generator" href="https://example.com/tellraw-generator" target="_blank">
+        <img src="https://i.imgur.com/tMG9JWn.png" alt="/tellraw生成器">
+        /tellraw生成器
+      </a>
+    </div>
+    <div class="rectangle">
+      <a class="generator" href="https://example.com/give-generator" target="_blank">
+        <img src="https://i.imgur.com/6AjBQdJ.png" alt="/give生成器">
+        /give生成器
+      </a>
+    </div>
+    <div class="rectangle">
+      <a class="generator" href="https://example.com/titleraw-generator" target="_blank">
+        <img src="https://i.imgur.com/tMG9JWn.png" alt="/titleraw生成器">
+        /titleraw生成器
+      </a>
+    </div>
+  </div>
+
+  <script>
+    function createRectangles() {
+      var rectangleContainer = document.getElementById("rectangleContainer");
+      rectangleContainer.style.display = "flex";
+    }
+
+    function playMusic() {
+      var audio = document.getElementById("bgMusic");
+      audio.play();
+      createRectangles();
+      document.getElementById("playButton").style.display = "none";
+
+      // 將文字往下移動 50px
+      document.getElementById("title").style.marginTop = "50px";
+    }
+  </script>
+
+  <!-- Discord 和 YouTube 邀請連結 -->
+  <div class="discord-yt">
+    <!-- Discord 邀請連結 -->
+    <a class="discord" href="https://discord.gg/VNxCE6EBFt" target="_blank">
+      <img src="https://static.vecteezy.com/system/resources/previews/006/892/625/non_2x/discord-logo-icon-editorial-free-vector.jpg" alt="Discord">
+      加入 Discord 社群
+    </a>
+
+    <!-- YouTube 頻道連結 -->
+    <a class="youtube" href="https://www.youtube.com/channel/UCJonZqjNNyBSrSIniAA6NpQ" target="_blank">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/YouTube_social_white_circle_%282017%29.svg/640px-YouTube_social_white_circle_%282017%29.svg.png" alt="YouTube">
+      前往 YouTube 頻道
+    </a>
+  </div>
+</body>
+</html>
