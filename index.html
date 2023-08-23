@@ -1,186 +1,191 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Ericbob's Main Hub</title>
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-  <style>
-    body {
-      background-image: url("https://wallpapercave.com/wp/wp2586787.jpg");
-      background-size: 100% 100%;
-      background-repeat: no-repeat;
-      background-position: center;
-      margin: 0;
-      padding: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      font-size: 24px;
-      text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-    }
+    <title>Hub</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-    .title {
-      text-align: center;
-      font-size: 50px;
-      margin-bottom: 20px;
-    }
+        .top-bar {
+            background-color: #434242;
+            height: 100px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative; /* 添加這個樣式來定位按鈕 */
+        }
 
-    .centered {
-      text-align: center;
-    }
+        .top-bar img {
+            width: 60px;
+            height: 60px;
+        }
 
-    .discord-yt {
-      display: flex;
-      justify-content: space-between;
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 320px;
-    }
+        .content-wrapper {
+            display: flex;
+            flex-grow: 1;
+        }
 
-    .discord,
-    .youtube {
-      display: flex;
-      align-items: center;
-      color: white;
-      text-decoration: none;
-      font-size: 8px;
-      padding: 2px 16px;
-      border: 1px solid white;
-      border-radius: 8px;
-    }
+        .sidebar-left {
+            background-color: #8f8b8b;
+            width: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px;
+        }
 
-    .discord img,
-    .youtube img {
-      width: 20px;
-      height: 20px;
-      margin-right: 5px;
-    }
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+        }
 
-    .button {
-      display: block;
-      background-color: transparent;
-      color: white;
-      border: 1px solid white;
-      border-radius: 8px;
-      padding: 8px 16px;
-      font-size: 16px;
-      cursor: pointer;
-      margin: 0 auto;
-    }
+        .sidebar-left .section {
+            margin-bottom: 20px;
+            color: white;
+        }
 
-    .rectangle-container {
-      display: flex;
-      justify-content: center;
-      margin-top: 50px;
-    }
+        .sidebar-left .section-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
 
-    .rectangle {
-      width: 200px;
-      height: 300px;
-      background-color: lightgray;
-      margin: 10px;
-      border: 2px solid black;
-      border-radius: 20px;
-      transition: all 0.3s ease;
-    }
+        .sidebar-left .section-item {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
 
-    .generator-container {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 10px;
-    }
+        .sidebar-left .section-item a {
+            color: #8715d4;
+            text-decoration: underline;
+        }
 
-    .generator {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      text-decoration: none;
-      font-size: 16px;
-      border: 2px solid black;
-      border-radius: 20px;
-    }
+        main {
+            flex-grow: 1;
+            padding: 20px;
+        }
 
-    .generator img {
-      width: 60px;
-      height: 60px;
-      margin-right: 10px;
-    }
-    /* 可以添加其他樣式以美化網站 */
-  </style>
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #a3a3a3;
+            width: 100%;
+        }
+
+        /* 右側側邊欄的樣式 */
+        .sidebar-right {
+            background-color: #8f8b8b;
+            width: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 20px;
+        }
+
+        .sidebar-right .section {
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .sidebar-right .section-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-right .section-item {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-right .section-item a {
+            color: #8715d4;
+            text-decoration: underline;
+        }
+
+        /* 按鈕的樣式 */
+        .toggle-btn {
+            position: absolute;
+            padding: 5px 10px;
+            background-color: #434242;
+            color: white;
+            cursor: pointer;
+        }
+
+        .toggle-btn.left-btn {
+            left: 10px;
+            top: 10px;
+        }
+
+        .toggle-btn.right-btn {
+            right: 10px;
+            top: 10px;
+        }
+    </style>
 </head>
 <body>
-  <!-- 背景音樂 -->
-  <audio id="bgMusic" loop>
-    <source src="https://static.wikia.nocookie.net/minecraft_zh_gamepedia/images/b/b1/Strad.ogg/revision/latest?cb=20120321225621" type="audio/ogg">
-	<source src="https://static.wikia.nocookie.net/minecraft_zh_gamepedia/images/0/01/Pigstep.ogg/revision/latest?cb=20200416011114" type="audio/ogg">
-    <!-- 如果你有多種格式的音樂，可以在這裡添加多個<source>標籤，瀏覽器將自動選擇支援的格式。 -->
-  </audio>
-
-  <div class="centered">
-    <div class="title" id="title">歡迎來到 Ericbob 的網站！</div>
-    <!-- 按鈕，按下時播放音樂 -->
-    <button class="button" onclick="playMusic()" id="playButton">你想要去哪裡？</button>
-  </div>
-
-  <!-- 當按鈕被按下時，在下方生成三個長方形 -->
-  <div class="rectangle-container" id="rectangleContainer" style="display: none;">
-    <div class="rectangle">
-      <a class="generator" href="https://ericbobxd.github.io/UUID-generator/" target="_blank">
-        <img src="https://i.imgur.com/H0OHY8O.jpg" alt="UUID 生成器">
-        UUID 生成器
-      </a>
+    <div class="top-bar">
+        <img src="logo.png" alt="Logo" class="logo">
+        <div class="toggle-btn left-btn" onclick="toggleSidebar('left')">Toggle Left Sidebar</div>
+        <div class="toggle-btn right-btn" onclick="toggleSidebar('right')">Toggle Right Sidebar</div>
     </div>
-    <div class="rectangle">
-      <a class="generator" href="https://ericbobxd.github.io/give-generator/" target="_blank">
-        <img src="https://i.imgur.com/6AjBQdJ.png" alt="/give生成器">
-        /give生成器
-      </a>
+    
+    <div class="content-wrapper">
+        <div class="sidebar-left">
+            <div class="section">
+                <div class="section-title">生成器專區</div>
+                <div class="section-item"><a href="https://ericbobxd.github.io/give-generator/">/give</a></div>
+                <div class="section-item"><a href="https://ericbobxd.github.io/titleraw-tellraw-generator/">/titleraw & /tellraw</a></div>
+                <div class="section-item"><a href="https://ericbobxd.github.io/UUID-generator/">UUID 1 & 4</a></div>
+                <div class="section-item"><a href="https://ericbobxd.github.io/psw_ID/">Password & ID</a></div>
+            </div>
+            <div class="section">
+                <div class="section-title">下載專區</div>
+                <div class="section-item"><a href="https://www.mediafire.com/file/swootaoadxoyhf7/example+function.mcpack/file">function demo</a></div>
+                <div class="section-item"><a href="">4D skin pack(win10 only)</a></div>
+                <div class="section-item"><a href="https://www.mediafire.com/file/x6wgr85gzsvjf2d/Convenient_Client_by_ericbob.mcpack/file">convenient client</a></div>
+                <div class="section-item"><a href="">pvp texture pack</a></div>
+                <div class="section-item"><a href="">dll client (not open yet:/)</a></div>
+            </div>
+        </div>
+        
+        <main>
+            <h1>Welcome to Hub by eric</h1>
+            <p>This is a hub where you can go to special areas on the left and right.</p>
+        </main>
+
+        <div class="sidebar-right">
+            <div class="section">
+                <div class="section-title">連結專區</div>
+                <div class="section-item"><a href="https://www.youtube.com/channel/UCJonZqjNNyBSrSIniAA6NpQ">Youtube</a></div>
+                <div class="section-item"><a href="https://discord.gg/VNxCE6EBFt">Discord</a></div>
+                <div class="section-item"><a href="https://github.com/EricbobXD?tab=repositories">Github</a></div>
+            </div>
+            <div class="section">
+                <div class="section-title">其他內容</div>
+                <div class="section-item">內容1</div>
+                <div class="section-item">內容2</div>
+                <div class="section-item">內容3</div>
+            </div>
+        </div>
     </div>
-    <div class="rectangle">
-      <a class="generator" href="https://ericbobxd.github.io/titleraw-tellraw-generator/" target="_blank">
-        <img src="https://i.imgur.com/tMG9JWn.png" alt="/titleraw & /tellraw生成器">
-        /titleraw & /tellraw生成器
-      </a>
-    </div>
-  </div>
 
-  <script>
-    function createRectangles() {
-      var rectangleContainer = document.getElementById("rectangleContainer");
-      rectangleContainer.style.display = "flex";
-    }
+    <footer>
+        <p>&copy; 2023 Hub by eric. All rights reserved.</p>
+    </footer>
 
-    function playMusic() {
-      var audio = document.getElementById("bgMusic");
-      audio.play();
-      createRectangles();
-      document.getElementById("playButton").style.display = "none";
-
-      // 將文字往下移動 50px
-      document.getElementById("title").style.marginTop = "50px";
-    }
-  </script>
-
-  <!-- Discord 和 YouTube 邀請連結 -->
-  <div class="discord-yt">
-    <!-- Discord 邀請連結 -->
-    <a class="discord" href="https://discord.gg/VNxCE6EBFt" target="_blank">
-      <img src="https://static.vecteezy.com/system/resources/previews/006/892/625/non_2x/discord-logo-icon-editorial-free-vector.jpg" alt="Discord">
-      加入 Discord 社群
-    </a>
-
-    <!-- YouTube 頻道連結 -->
-    <a class="youtube" href="https://www.youtube.com/channel/UCJonZqjNNyBSrSIniAA6NpQ" target="_blank">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/YouTube_social_white_circle_%282017%29.svg/640px-YouTube_social_white_circle_%282017%29.svg.png" alt="YouTube">
-      前往 YouTube 頻道
-    </a>
-  </div>
+    <script>
+        function toggleSidebar(sidebar) {
+            const sidebarElement = document.querySelector(`.sidebar-${sidebar}`);
+            sidebarElement.style.display = sidebarElement.style.display === 'none' ? 'flex' : 'none';
+        }
+    </script>
 </body>
 </html>
