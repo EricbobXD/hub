@@ -1,191 +1,131 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
-    <title>Hub</title>
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub 頁面</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
         body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            scroll-behavior: smooth;
         }
-
-        .top-bar {
-            background-color: #434242;
-            height: 100px;
+        .navbar {
+            position: fixed;
+            top: 0;
             width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative; /* 添加這個樣式來定位按鈕 */
+            background-color: #333;
+            overflow: hidden;
+            z-index: 1000;
         }
-
-        .top-bar img {
-            width: 60px;
-            height: 60px;
-        }
-
-        .content-wrapper {
-            display: flex;
-            flex-grow: 1;
-        }
-
-        .sidebar-left {
-            background-color: #8f8b8b;
-            width: 150px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            padding: 20px;
-        }
-
-        .logo {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 20px;
-        }
-
-        .sidebar-left .section {
-            margin-bottom: 20px;
-            color: white;
-        }
-
-        .sidebar-left .section-title {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        .sidebar-left .section-item {
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .sidebar-left .section-item a {
-            color: #8715d4;
-            text-decoration: underline;
-        }
-
-        main {
-            flex-grow: 1;
-            padding: 20px;
-        }
-
-        footer {
+        .navbar a {
+            float: left;
+            display: block;
+            color: #f2f2f2;
             text-align: center;
-            padding: 10px;
-            background-color: #a3a3a3;
-            width: 100%;
+            padding: 14px 20px;
+            text-decoration: none;
+            transition: background-color 0.3s, color 0.3s;
         }
-
-        /* 右側側邊欄的樣式 */
-        .sidebar-right {
-            background-color: #8f8b8b;
-            width: 150px;
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+        .section {
+            padding: 100px 20px;
+            min-height: 100vh;
             display: flex;
+            justify-content: center;
+            align-items: center;
             flex-direction: column;
-            align-items: flex-start;
-            padding: 20px;
+            text-align: center;
+            color: white;
+            opacity: 0; /* 初始時透明 */
+            transform: translateY(20px); /* 初始時向下移動 */
+            transition: opacity 1s ease-out, transform 1s ease-out; /* 漸變效果 */
         }
-
-        .sidebar-right .section {
+        .section.visible {
+            opacity: 1; /* 變得不透明 */
+            transform: translateY(0); /* 移回原位置 */
+        }
+        #home {
+            background-color: #1abc9c;
+        }
+        #about {
+            background-color: #3498db;
+        }
+        #services {
+            background-color: #9b59b6;
+        }
+        #contact {
+            background-color: #e74c3c;
+        }
+        .section h1 {
+            font-size: 3em;
             margin-bottom: 20px;
-            color: white;
         }
-
-        .sidebar-right .section-title {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        .sidebar-right .section-item {
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .sidebar-right .section-item a {
-            color: #8715d4;
-            text-decoration: underline;
-        }
-
-        /* 按鈕的樣式 */
-        .toggle-btn {
-            position: absolute;
-            padding: 5px 10px;
-            background-color: #434242;
-            color: white;
-            cursor: pointer;
-        }
-
-        .toggle-btn.left-btn {
-            left: 10px;
-            top: 10px;
-        }
-
-        .toggle-btn.right-btn {
-            right: 10px;
-            top: 10px;
+        .section p {
+            font-size: 1.5em;
+            max-width: 600px;
         }
     </style>
 </head>
 <body>
-    <div class="top-bar">
-        <img src="logo.png" alt="Logo" class="logo">
-        <div class="toggle-btn left-btn" onclick="toggleSidebar('left')">Toggle Left Sidebar</div>
-        <div class="toggle-btn right-btn" onclick="toggleSidebar('right')">Toggle Right Sidebar</div>
-    </div>
-    
-    <div class="content-wrapper">
-        <div class="sidebar-left">
-            <div class="section">
-                <div class="section-title">生成器專區</div>
-                <div class="section-item"><a href="https://ericbobxd.github.io/give-generator/">/give</a></div>
-                <div class="section-item"><a href="https://ericbobxd.github.io/titleraw-tellraw-generator/">/titleraw & /tellraw</a></div>
-                <div class="section-item"><a href="https://ericbobxd.github.io/UUID-generator/">UUID 1 & 4</a></div>
-                <div class="section-item"><a href="https://ericbobxd.github.io/psw_ID/">Password & ID</a></div>
-            </div>
-            <div class="section">
-                <div class="section-title">下載專區</div>
-                <div class="section-item"><a href="https://www.mediafire.com/file/swootaoadxoyhf7/example+function.mcpack/file">function demo</a></div>
-                <div class="section-item"><a href="">4D skin pack(win10 only)</a></div>
-                <div class="section-item"><a href="https://www.mediafire.com/file/x6wgr85gzsvjf2d/Convenient_Client_by_ericbob.mcpack/file">convenient client</a></div>
-                <div class="section-item"><a href="">pvp texture pack</a></div>
-                <div class="section-item"><a href="">dll client (not open yet:/)</a></div>
-            </div>
-        </div>
-        
-        <main>
-            <h1>Welcome to Hub by eric</h1>
-            <p>This is a hub where you can go to special areas on the left and right.</p>
-        </main>
 
-        <div class="sidebar-right">
-            <div class="section">
-                <div class="section-title">連結專區</div>
-                <div class="section-item"><a href="https://www.youtube.com/channel/UCJonZqjNNyBSrSIniAA6NpQ">Youtube</a></div>
-                <div class="section-item"><a href="https://discord.gg/VNxCE6EBFt">Discord</a></div>
-                <div class="section-item"><a href="https://github.com/EricbobXD?tab=repositories">Github</a></div>
-            </div>
-            <div class="section">
-                <div class="section-title">其他內容</div>
-                <div class="section-item">內容1</div>
-                <div class="section-item">內容2</div>
-                <div class="section-item">內容3</div>
-            </div>
-        </div>
+    <div class="navbar">
+        <a href="#home">首頁</a>
+        <a href="#about">關於我們</a>
+        <a href="#services">服務</a>
+        <a href="#contact">聯繫我們</a>
     </div>
 
-    <footer>
-        <p>&copy; 2023 Hub by eric. All rights reserved.</p>
-    </footer>
+    <div id="home" class="section">
+        <h1>歡迎來到我們的Hub頁面</h1>
+        <p>這是您的首頁部分。</p>
+    </div>
+
+    <div id="about" class="section">
+        <h1>關於我們</h1>
+        <p>這是關於我們的部分。</p>
+    </div>
+
+    <div id="services" class="section">
+        <h1>服務</h1>
+        <p>這是我們的服務部分。</p>
+    </div>
+
+    <div id="contact" class="section">
+        <h1>聯繫我們</h1>
+        <p>這是聯繫我們的部分。</p>
+    </div>
 
     <script>
-        function toggleSidebar(sidebar) {
-            const sidebarElement = document.querySelector(`.sidebar-${sidebar}`);
-            sidebarElement.style.display = sidebarElement.style.display === 'none' ? 'flex' : 'none';
-        }
+        // 當用戶滾動時檢查每個部分是否進入視口
+        document.addEventListener('scroll', function() {
+            var sections = document.querySelectorAll('.section');
+            var scrollPosition = window.scrollY + window.innerHeight;
+
+            sections.forEach(function(section) {
+                if (scrollPosition > section.offsetTop + 100) {
+                    section.classList.add('visible');
+                }
+            });
+        });
+
+        // 初始加載時檢查每個部分是否進入視口
+        document.addEventListener('DOMContentLoaded', function() {
+            var sections = document.querySelectorAll('.section');
+            var scrollPosition = window.scrollY + window.innerHeight;
+
+            sections.forEach(function(section) {
+                if (scrollPosition > section.offsetTop + 100) {
+                    section.classList.add('visible');
+                }
+            });
+        });
     </script>
+
 </body>
 </html>
