@@ -10,7 +10,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            scroll-behavior: smooth;
+            overflow: hidden; /* 隱藏滾動條 */
         }
         .navbar {
             position: fixed;
@@ -34,21 +34,24 @@
             color: black;
         }
         .section {
-            padding: 100px 20px;
-            min-height: 100vh;
-            display: flex;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 100vh;
+            display: none; /* 初始隱藏所有區塊 */
             justify-content: center;
             align-items: center;
             flex-direction: column;
             text-align: center;
             color: white;
-            opacity: 0; /* 初始時透明 */
-            transform: translateY(20px); /* 初始時向下移動 */
-            transition: opacity 1s ease-out, transform 1s ease-out; /* 漸變效果 */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
         }
         .section.visible {
-            opacity: 1; /* 變得不透明 */
-            transform: translateY(0); /* 移回原位置 */
+            display: flex; /* 顯示選中的區塊 */
+            opacity: 1;
+            transform: translateY(0);
         }
         #home {
             background-color: #1abc9c;
@@ -75,13 +78,13 @@
 <body>
 
     <div class="navbar">
-        <a href="#home">首頁</a>
-        <a href="#about">關於我們</a>
-        <a href="#services">服務</a>
-        <a href="#contact">聯繫我們</a>
+        <a href="#home" class="nav-link">首頁</a>
+        <a href="#about" class="nav-link">關於我們</a>
+        <a href="#services" class="nav-link">服務</a>
+        <a href="#contact" class="nav-link">聯繫我們</a>
     </div>
 
-    <div id="home" class="section">
+    <div id="home" class="section visible">
         <h1>歡迎來到我們的Hub頁面</h1>
         <p>這是您的首頁部分。</p>
     </div>
@@ -102,27 +105,31 @@
     </div>
 
     <script>
-        // 當用戶滾動時檢查每個部分是否進入視口
-        document.addEventListener('scroll', function() {
-            var sections = document.querySelectorAll('.section');
-            var scrollPosition = window.scrollY + window.innerHeight;
-
-            sections.forEach(function(section) {
-                if (scrollPosition > section.offsetTop + 100) {
-                    section.classList.add('visible');
-                }
-            });
-        });
-
-        // 初始加載時檢查每個部分是否進入視口
         document.addEventListener('DOMContentLoaded', function() {
+            var links = document.querySelectorAll('.nav-link');
             var sections = document.querySelectorAll('.section');
-            var scrollPosition = window.scrollY + window.innerHeight;
 
-            sections.forEach(function(section) {
-                if (scrollPosition > section.offsetTop + 100) {
-                    section.classList.add('visible');
-                }
+            links.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    var targetId = link.getAttribute('href').substring(1);
+                    var targetSection = document.getElementById(targetId);
+
+                    sections.forEach(section => {
+                        section.classList.remove('visible');
+                    });
+
+                    setTimeout(() => {
+                        sections.forEach(section => {
+                            section.style.display = 'none';
+                        });
+                        targetSection.style.display = 'flex';
+
+                        setTimeout(() => {
+                            targetSection.classList.add('visible');
+                        }, 50); // 等待一小段時間以觸發動畫
+                    }, 500); // 確保所有動畫完成後再切換
+                });
             });
         });
     </script>
