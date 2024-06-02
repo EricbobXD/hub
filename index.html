@@ -61,9 +61,13 @@
         }
         #services {
             background-color: #9b59b6;
+            flex-direction: row;
+            flex-wrap: wrap;
         }
         #contact {
             background-color: #e74c3c;
+            flex-direction: row;
+            flex-wrap: wrap;
         }
         .section h1 {
             font-size: 3em;
@@ -72,6 +76,37 @@
         .section p {
             font-size: 1.5em;
             max-width: 600px;
+        }
+        .service-box, .contact-box {
+            background-color: #ffffff;
+            color: #333;
+            border-radius: 10px;
+            width: 200px;
+            height: 300px;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .service-box:hover, .contact-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .service-box img, .contact-box img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 15px;
+        }
+        .service-box p, .contact-box p {
+            font-size: 1.2em;
+            margin: 0;
         }
     </style>
 </head>
@@ -82,6 +117,8 @@
         <a href="#about" class="nav-link">關於我們</a>
         <a href="#services" class="nav-link">服務</a>
         <a href="#contact" class="nav-link">聯繫我們</a>
+        <a href="https://www.example.com" class="nav-link" target="_blank">外部連結</a> <!-- 外部連結 -->
+        <a href="internal-page.html" class="nav-link">內部頁面</a> <!-- 內部連結 -->
     </div>
 
     <div id="home" class="section visible">
@@ -95,13 +132,41 @@
     </div>
 
     <div id="services" class="section">
-        <h1>服務</h1>
-        <p>這是我們的服務部分。</p>
+        <div class="service-box" onclick="window.location.href='https://www.example1.com'">
+            <img src="https://via.placeholder.com/100" alt="Service 1">
+            <p>服務 1</p>
+        </div>
+        <div class="service-box" onclick="window.location.href='https://www.example2.com'">
+            <img src="https://via.placeholder.com/100" alt="Service 2">
+            <p>服務 2</p>
+        </div>
+        <div class="service-box" onclick="window.location.href='https://www.example3.com'">
+            <img src="https://via.placeholder.com/100" alt="Service 3">
+            <p>服務 3</p>
+        </div>
+        <div class="service-box" onclick="window.location.href='https://www.example4.com'">
+            <img src="https://via.placeholder.com/100" alt="Service 4">
+            <p>服務 4</p>
+        </div>
     </div>
 
     <div id="contact" class="section">
-        <h1>聯繫我們</h1>
-        <p>這是聯繫我們的部分。</p>
+        <div class="contact-box" onclick="window.location.href='https://www.example5.com'">
+            <img src="https://via.placeholder.com/100" alt="Contact 1">
+			<p>Discord</p>
+        </div>
+        <div class="contact-box" onclick="window.location.href='https://www.example6.com'">
+            <img src="https://via.placeholder.com/100" alt="Contact 2">
+			<p>Youtube</p>
+        </div>
+        <div class="contact-box" onclick="window.location.href='https://www.example7.com'">
+            <img src="https://via.placeholder.com/100" alt="Contact 3">
+			<p>Instagram</p>
+        </div>
+        <div class="contact-box" onclick="window.location.href='https://www.example8.com'">
+            <img src="https://via.placeholder.com/100" alt="Contact 4">
+			<p>Github</p>
+        </div>
     </div>
 
     <script>
@@ -111,24 +176,27 @@
 
             links.forEach(link => {
                 link.addEventListener('click', function(event) {
-                    event.preventDefault();
                     var targetId = link.getAttribute('href').substring(1);
                     var targetSection = document.getElementById(targetId);
 
-                    sections.forEach(section => {
-                        section.classList.remove('visible');
-                    });
+                    if (targetSection) {
+                        event.preventDefault();
 
-                    setTimeout(() => {
                         sections.forEach(section => {
-                            section.style.display = 'none';
+                            section.classList.remove('visible');
                         });
-                        targetSection.style.display = 'flex';
 
                         setTimeout(() => {
-                            targetSection.classList.add('visible');
-                        }, 50); // 等待一小段時間以觸發動畫
-                    }, 500); // 確保所有動畫完成後再切換
+                            sections.forEach(section => {
+                                section.style.display = 'none';
+                            });
+                            targetSection.style.display = 'flex';
+
+                            setTimeout(() => {
+                                targetSection.classList.add('visible');
+                            }, 50); // 等待一小段時間以觸發動畫
+                        }, 500); // 確保所有動畫完成後再切換
+                    }
                 });
             });
         });
