@@ -60,6 +60,11 @@
         #about {
             background-color: #3498db;
         }
+        #mcpe {
+            background-color: #4569b6;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
         #services {
             background-color: #9b59b6;
             flex-direction: row;
@@ -78,7 +83,7 @@
             font-size: 1.5em;
             max-width: 600px;
         }
-        .service-box, .contact-box {
+        .service-box, .contact-box, .mcpe-box {
             background-color: #ffffff;
             color: #333;
             border-radius: 10px;
@@ -94,18 +99,18 @@
             cursor: pointer;
             transition: transform 0.3s, box-shadow 0.3s;
         }
-        .service-box:hover, .contact-box:hover {
+        .service-box:hover, .contact-box:hover, .mcpe-box:hover {
             transform: translateY(-10px);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
-        .service-box img, .contact-box img {
+        .service-box img, .contact-box img, .mcpe-box img {
             width: 100px;
             height: 100px;
             object-fit: cover;
             border-radius: 50%;
             margin-bottom: 15px;
         }
-        .service-box p, .contact-box p {
+        .service-box p, .contact-box p, .mcpe-box p {
             font-size: 1.2em;
             margin: 0;
         }
