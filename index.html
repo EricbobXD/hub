@@ -1,276 +1,366 @@
-<!DOCTYPE html>
+b<!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="歡迎來到 Bob 的個人網站，展示履歷與作品集。">
+    <meta name="author" content="Bob">
     <title>Ericbob's Hub</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-dark: #121212;
+            --text-light: #ffffff;
+            --accent-color: #1abc9c;
+            --secondary-accent: #1a70bc;
+            --transition: 0.5s ease;
+        }
+
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            overflow: hidden; /* 隱藏滾動條 */
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.2em;
+            line-height: 1.6;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            overflow-x: hidden;
+            transition: opacity var(--transition);
         }
-        .navbar {
+
+        header {
             position: fixed;
             top: 0;
             width: 100%;
             background-color: #333;
-            overflow: hidden;
             z-index: 1000;
+            padding: 10px 20px;
+            transition: background-color 0.3s ease;
         }
-        .navbar a {
-            float: left;
-            display: block;
-            color: #f2f2f2;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .navbar a:hover {
-            background-color: #ddd;
-            color: black;
-        }
-        .section {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            height: 100vh;
-            display: none; /* 初始隱藏所有區塊 */
-            justify-content: center;
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            flex-direction: column;
-            text-align: center;
-            color: white;
+        }
+
+        .navbar a {
+            color: var(--text-light);
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 5px;
+            border-radius: 4px;
+            transition: color var(--transition), background-color var(--transition);
+        }
+
+        .navbar a:hover {
+            color: var(--accent-color);
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        main {
+            margin-top: 70px;
+            /* Offset for fixed header */
+            padding: 20px;
+        }
+
+        .section {
+            display: none;
             opacity: 0;
             transform: translateY(20px);
-            transition: opacity 1s ease-out, transform 1s ease-out;
+            transition: opacity var(--transition), transform var(--transition);
         }
+
         .section.visible {
-            display: flex; /* 顯示選中的區塊 */
+            display: block;
             opacity: 1;
             transform: translateY(0);
         }
-        #home {
-            background-color: #1abc9c;
+
+        #about .timeline {
+            position: relative;
+            padding: 20px 0;
+            margin: 0 auto;
+            max-width: 800px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease, transform 1s ease;
         }
-        #about {
-            background-color: #3498db;
+
+        #about .timeline.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
-        #web {
-            background-color: #4569b6;
-            flex-direction: row;
-            flex-wrap: wrap;
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--accent-color);
+            transform: translateX(-50%);
         }
-        #web2 {
-            background-color: #9b59b6;
-            flex-direction: row;
-            flex-wrap: wrap;
-        }
-        #other {
-            background-color: #9b59b6;
-            flex-direction: row;
-            flex-wrap: wrap;
-        }
-        #contact {
-            background-color: #e74c3c;
-            flex-direction: row;
-            flex-wrap: wrap;
-        }
-        .section h1 {
-            font-size: 3em;
+
+        .timeline-item {
+            position: relative;
             margin-bottom: 20px;
+            width: 50%;
+            padding: 10px 20px;
+            background-color: #1e1e1e;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: left;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
         }
-        .section p {
-            font-size: 1.5em;
-            max-width: 600px;
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
         }
-        .service-box, .contact-box, .mcpe-box {
-            background-color: #ffffff;
-            color: #333;
-            border-radius: 10px;
-            width: 200px;
-            height: 300px;
-            margin: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            text-align: right;
         }
-        .service-box:hover, .contact-box:hover, .mcpe-box:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-        .service-box img, .contact-box img, .mcpe-box img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            width: 15px;
+            height: 15px;
+            background-color: var(--accent-color);
             border-radius: 50%;
-            margin-bottom: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 1;
         }
-        .service-box p, .contact-box p, .mcpe-box p {
-            font-size: 1.2em;
-            margin: 0;
+
+        .timeline-item:nth-child(odd)::before {
+            right: -7.5px;
+        }
+
+        .timeline-item:nth-child(even)::before {
+            left: -7.5px;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        #web .web-projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        #home .web-projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .box {
+            background-color: #1e1e1e;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: transform var(--transition), box-shadow var(--transition);
+        }
+
+        .box img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background-color: #333;
+            color: var(--text-light);
         }
     </style>
 </head>
+
 <body>
-
-    <div class="navbar">
-        <a href="#home" class="nav-link">首頁</a>
-        <a href="#about" class="nav-link">關於Bob</a>
-        <a href="#web" class="nav-link">網頁作品</a>
-        <a href="#web2" class="nav-link">網頁作品2</a>
-        <a href="#other" class="nav-link">其他作品</a>
-        <a href="#contact" class="nav-link">聯繫Bob</a>
-    </div>
-
-    <div id="home" class="section visible">
-        <h1>歡迎來到Bob的網站</h1>
-        <p>歡迎參觀:D</p>
-    </div>
-
-    <div id="about" class="section">
-        <h1>關於Bob</h1>
-        <p>一位普通高中生，這個網站除了用於紀錄歷程之外，同時也希望開發的東西能給大家使用、交流。</p>
-        <p>2023 生科競賽 精品獎 決賽入選</p>
-        <p>2024 台灣仿生設計競賽高中職組競賽 全國決賽入選</p>
-        <p>2024 臺北市2024年STEAM 跨域競賽 第二名</p>
-    </div>
-
-    <div id="web" class="section">
-        <div class="service-box" onclick="window.location.href='https://ericbobxd.github.io/mcpe.cmd-give/'">
-            <img src="https://via.placeholder.com/100" alt="Mcpe 1">
-            <p>give 指令生成器</p>
-            <p>(MCPE only)</p>
-        </div>
-        <div class="service-box" onclick="window.location.href='https://ericbobxd.github.io/mcpe.cmd-title-tellraw-titleraw/'">
-            <img src="https://via.placeholder.com/100" alt="Mcpe 2">
-            <p>title/titleraw/tellraw 指令生成器</p>
-            <p>(MCPE only)</p>
-        </div>
-        <div class="service-box" onclick="window.location.href='https://ericbobxd.github.io/UUID-Password/'">
-            <img src="https://cdn-icons-png.freepik.com/256/7368/7368465.png?semt=ais_hybrid" alt="Mcpe 3">
-            <p>UUID & 密碼生成器</p>
-        </div>
-        <div class="service-box" onclick="window.location.href='https://ericbobxd.github.io/school.clothing_ai_chose/'">
-            <img src="https://media.gq.com/photos/65cfbf6e8aa1eb1e0bb7ecf4/16:9/w_1920,c_limit/gerald-art.jpg" alt="Mcpe 4">
-            <p>衣物搭配</p>
-        </div>
-    </div>
-
-       <div id="web2" class="section">
-        <div class="service-box" onclick="window.location.href='https://ericbobxd.github.io/C-Blockly/'">
-            <img src="http://www.ozone3d.net/public/jegx/201206/google-blockly.jpg" alt="Service 1">
-            <p>C++ Blockly</p>
-        </div>
-        <div class="service-box" onclick="window.location.href=''">
-            <img src="https://static.wikia.nocookie.net/minecraft_gamepedia/images/c/cd/Barrier_%28held%29_JE1_BE1.png" alt="Service 2">
-            <p>Not in service</p>
-        </div>
-        <div class="service-box" onclick="window.location.href=''">
-            <img src="https://static.wikia.nocookie.net/minecraft_gamepedia/images/c/cd/Barrier_%28held%29_JE1_BE1.png" alt="Service 3">
-            <p>Not in service</p>
-        </div>
-        <div class="service-box" onclick="window.location.href=''">
-            <img src="https://static.wikia.nocookie.net/minecraft_gamepedia/images/c/cd/Barrier_%28held%29_JE1_BE1.png" alt="Service 4">
-            <p>Not in service</p>
-        </div>    
-    </div> 
-
-    <div id="other" class="section">
-        <div class="service-box" onclick="window.location.href=''">
-            <img src="https://static.wikia.nocookie.net/minecraft_gamepedia/images/c/cd/Barrier_%28held%29_JE1_BE1.png" alt="Service 1">
-            <p>Not in service</p>
-        </div>
-        <div class="service-box" onclick="window.location.href=''">
-            <img src="https://static.wikia.nocookie.net/minecraft_gamepedia/images/c/cd/Barrier_%28held%29_JE1_BE1.png" alt="Service 2">
-            <p>Not in service</p>
-        </div>
-        <div class="service-box" onclick="window.location.href=''">
-            <img src="https://static.wikia.nocookie.net/minecraft_gamepedia/images/c/cd/Barrier_%28held%29_JE1_BE1.png" alt="Service 3">
-            <p>Not in service</p>
-        </div>
-        <div class="service-box" onclick="window.location.href=''">
-            <img src="https://static.wikia.nocookie.net/minecraft_gamepedia/images/c/cd/Barrier_%28held%29_JE1_BE1.png" alt="Service 4">
-            <p>Not in service</p>
-        </div>    
-    </div> 
-    
-    <div id="contact" class="section">
-        <div class="contact-box" onclick="window.location.href='https://discord.com/invite/fTWenk9xYq'">
-            <img src="https://w7.pngwing.com/pngs/580/137/png-transparent-discord-logo.png" alt="Contact 1">
-            <p>Ericbob's Space</p>
-        </div>
-        <div class="contact-box" onclick="window.location.href='https://www.youtube.com/channel/UCJonZqjNNyBSrSIniAA6NpQ'">
-            <img src="https://cdn-icons-png.flaticon.com/256/1384/1384060.png" alt="Contact 2">
-            <p>Metro Bob</p>
-        </div>
-        <div class="contact-box" onclick="window.location.href='https://www.instagram.com/coder._.rexbob/'">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/2048px-Instagram_icon.png" alt="Contact 3">
-            <p>Coderex._.bob</p>
-        </div>
-        <div class="contact-box" onclick="window.location.href='https://github.com/EricbobXD'">
-            <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" alt="Contact 4">
-            <p>EricbobXD</p>
-        </div>
-    </div>
+    <header>
+        <nav class="navbar">
+            <div>
+                <a href="#home" class="nav-link">首頁</a>
+                <a href="#about" class="nav-link">關於我</a>
+                <a href="#web" class="nav-link">作品集</a>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <section id="home" class="section visible">
+            <h1>歡迎來到Bob的Hub頁面</h1>
+            <p>最近作品</p>
+            <div class="web-projects">
+                <a href='https://ericbobxd.github.io/' target="_blank">
+                    <div class="box">
+                        <img src="https://via.placeholder.com/150" alt="Project 1">
+                        <h3>C++ Blockly</h3>
+                    </div>                    
+                </a>
+                <a href='https://ericbobxd.github.io/hub' target="_blank">
+                    <div class="box">
+                        <img src="https://via.placeholder.com/150" alt="Project 1">
+                        <h3>網頁</h3>
+                    </div>                    
+                </a>
+                <a href='https://ericbobxd.github.io/mcpe.cmd-give' target="_blank">
+                    <div class="box">
+                        <img src="https://via.placeholder.com/150" alt="Project 1">
+                        <h3>/give 生成器</h3>
+                    </div>                    
+                </a>
+                <a href='https://ericbobxd.github.io/mcpe.cmd-title-tellraw-titleraw' target="_blank">
+                    <div class="box">
+                        <img src="https://via.placeholder.com/150" alt="Project 1">
+                        <h3>文本指令生成器</h3>
+                    </div>                    
+                </a>
+            </div>
+            <footer>
+                <p>&copy; 2024 Bob. All Rights Reserved.</p>
+            </footer>
+        </section>
+        <section id="about" class="section">
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3>2023</h3>
+                    <p>參加 Minecraft X Python 程式設計課程</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>2023</h3>
+                    <p>生科競賽 精品獎 決賽入選</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>2024</h3>
+                    <p>台灣仿生設計競賽高中職組競賽 全國決賽入選</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>2024</h3>
+                    <p>臺北市2024年STEAM 跨域龍舟競賽 第二名</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>2024</h3>
+                    <p>參加全國自走車競賽</p>
+                </div>
+            </div>
+            <footer>
+                <p>&copy; 2024 Bob. All Rights Reserved.</p>
+            </footer>
+        </section>
+        <section id="web" class="section">
+            <h2>作品集</h2>
+            <div class="web-projects">
+                <a href='https://ericbobxd.github.io/' target="_blank">
+                    <div class="box">
+                        <img src="https://via.placeholder.com/150" alt="Project 1">
+                        <h3>C++ Blockly</h3>
+                    </div>                    
+                </a>
+                <a href='https://ericbobxd.github.io/hub' target="_blank">
+                    <div class="box">
+                        <img src="https://via.placeholder.com/150" alt="Project 1">
+                        <h3>網頁</h3>
+                    </div>                    
+                </a>
+                <a href='https://ericbobxd.github.io/mcpe.cmd-give' target="_blank">
+                    <div class="box">
+                        <img src="https://via.placeholder.com/150" alt="Project 1">
+                        <h3>/give 生成器</h3>
+                    </div>                    
+                </a>
+                <a href='https://ericbobxd.github.io/mcpe.cmd-title-tellraw-titleraw' target="_blank">
+                    <div class="box">
+                        <img src="https://via.placeholder.com/150" alt="Project 1">
+                        <h3>文本指令生成器</h3>
+                    </div>                    
+                </a>
+                <a href='https://ericbobxd.github.io/UUID-Password/' target="_blank">
+                    <div class="box">
+                        <img src="https://via.placeholder.com/150" alt="Project 1">
+                        <h3>UUID密碼生成器</h3>
+                    </div>                    
+                </a>
+                <a href='https://ericbobxd.github.io/school.clothing_ai_chose/' target="_blank">
+                    <div class="box">
+                        <img src="https://via.placeholder.com/150" alt="Project 1">
+                        <h3>衣物搭配</h3>
+                    </div>                    
+                </a>
+            </div>
+            <footer>
+                <p>&copy; 2024 Bob. All Rights Reserved.</p>
+            </footer>
+        </section>
+    </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var links = document.querySelectorAll('.nav-link');
-            var sections = document.querySelectorAll('.section');
-            var firstVisit = sessionStorage.getItem('firstVisit');
+            const links = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.section');
+            const timeline = document.querySelector('#about .timeline');
 
-            if (!firstVisit) {
-                sessionStorage.setItem('firstVisit', 'true');
-                sections.forEach(section => {
-                    section.classList.remove('visible');
-                    section.style.display = 'none';
-                });
-                setTimeout(() => {
-                    var homeSection = document.getElementById('home');
-                    homeSection.style.display = 'flex';
-                    setTimeout(() => {
-                        homeSection.classList.add('visible');
-                    }, 50);
-                }, 500);
-            }
+            // Show timeline with delay
+            setTimeout(() => {
+                timeline.classList.add('visible');
+            }, 500);
 
             links.forEach(link => {
                 link.addEventListener('click', function(event) {
-                    var targetId = link.getAttribute('href').substring(1);
-                    var targetSection = document.getElementById(targetId);
+                    event.preventDefault(); // 阻止預設的跳轉行為
+
+                    const targetId = link.getAttribute('href').substring(1); // 取得目標區塊的 ID
+                    const targetSection = document.getElementById(targetId); // 找到目標區塊
 
                     if (targetSection) {
-                        event.preventDefault();
-
+                        // 隱藏所有區塊
                         sections.forEach(section => {
                             section.classList.remove('visible');
+                            section.style.visibility = 'hidden'; // 隱藏區塊
+                            section.style.opacity = '0'; // 設置透明度
                         });
 
+                        // 過渡動畫後顯示目標區塊
                         setTimeout(() => {
-                            sections.forEach(section => {
-                                section.style.display = 'none';
-                            });
-                            targetSection.style.display = 'flex';
-
+                            targetSection.style.visibility = 'visible';
+                            targetSection.style.opacity = '1';
                             setTimeout(() => {
                                 targetSection.classList.add('visible');
-                            }, 50); // 等待一小段時間以觸發動畫
+                            }, 50); // 等待一點點以觸發動畫
                         }, 500); // 確保所有動畫完成後再切換
                     }
                 });
             });
+
+            // Add animations for timeline items when they appear
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.classList.add('visible');
+                }, 300 * index); // Delay for each item in timeline
+            });
         });
     </script>
-
 </body>
+
 </html>
