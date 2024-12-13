@@ -1,4 +1,4 @@
-b<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 
 <head>
@@ -6,27 +6,25 @@ b<!DOCTYPE html>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="歡迎來到 Bob 的個人網站，展示履歷與作品集。">
     <meta name="author" content="Bob">
-    <title>Ericbob's Hub</title>
+    <title>Bob的網站</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-dark: #121212;
             --text-light: #ffffff;
-            --accent-color: #1abc9c;
+            --accent-color: #1abc83;
             --secondary-accent: #1a70bc;
-            --transition: 0.5s ease;
+            --copyright: #da0303;
+            --transition: 0.6s ease-in-out;
         }
 
         body {
             margin: 0;
             padding: 0;
             font-family: 'Poppins', sans-serif;
-            font-size: 1.2em;
-            line-height: 1.6;
             background-color: var(--bg-dark);
             color: var(--text-light);
             overflow-x: hidden;
-            transition: opacity var(--transition);
         }
 
         header {
@@ -36,13 +34,11 @@ b<!DOCTYPE html>
             background-color: #333;
             z-index: 1000;
             padding: 10px 20px;
-            transition: background-color 0.3s ease;
         }
 
         .navbar {
-            display: flex;
+            display: auto;
             justify-content: space-between;
-            align-items: center;
         }
 
         .navbar a {
@@ -50,47 +46,50 @@ b<!DOCTYPE html>
             text-decoration: none;
             margin: 0 10px;
             padding: 5px;
-            border-radius: 4px;
-            transition: color var(--transition), background-color var(--transition);
+            transition: color var(--transition);
         }
 
         .navbar a:hover {
             color: var(--accent-color);
-            background-color: rgba(0, 0, 0, 0.2);
         }
 
         main {
-            margin-top: 70px;
-            /* Offset for fixed header */
-            padding: 20px;
+            margin-top: 60px;
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 60px);
+            overflow: hidden;
         }
 
         .section {
-            display: none;
+            position: absolute;
+            top: 0;
+            left: 100%;
+            width: 100%;
+            height: 100%;
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity var(--transition), transform var(--transition);
+            transform: translateX(100%);
+            transition: transform var(--transition), opacity var(--transition);
         }
 
-        .section.visible {
-            display: block;
+        .section.active {
+            left: 0;
             opacity: 1;
-            transform: translateY(0);
+            transform: translateX(0);
         }
 
-        #about .timeline {
+        .section.hidden {
+            left: -100%;
+            opacity: 0;
+            transform: translateX(-100%);
+        }
+
+        /* Timeline styles */
+        .timeline {
             position: relative;
-            padding: 20px 0;
-            margin: 0 auto;
             max-width: 800px;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 1s ease, transform 1s ease;
-        }
-
-        #about .timeline.visible {
-            opacity: 1;
-            transform: translateY(0);
+            margin: auto;
+            padding: 20px 0;
         }
 
         .timeline::before {
@@ -100,19 +99,20 @@ b<!DOCTYPE html>
             top: 0;
             bottom: 0;
             width: 4px;
-            background-color: var(--accent-color);
+            background-color: var(--secondary-accent);
             transform: translateX(-50%);
         }
 
         .timeline-item {
             position: relative;
-            margin-bottom: 20px;
             width: 50%;
-            padding: 10px 20px;
+            height: auto;
+            padding: 15px 20px;
             background-color: #1e1e1e;
             border-radius: 8px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             text-align: left;
+            margin-bottom: 30px;  /* Increase space between timeline items */
             opacity: 0;
             transform: translateX(-30px);
             transition: opacity 0.5s ease, transform 0.5s ease;
@@ -133,7 +133,7 @@ b<!DOCTYPE html>
             top: 15px;
             width: 15px;
             height: 15px;
-            background-color: var(--accent-color);
+            background-color: var(--secondary-accent);
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
             z-index: 1;
@@ -152,25 +152,18 @@ b<!DOCTYPE html>
             transform: translateX(0);
         }
 
-        #web .web-projects {
+        /* Project display styles */
+        .web-projects {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 20px;
-            padding: 20px 0;
-        }
-
-        #home .web-projects {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            padding: 20px 0;
+            padding: 20px;
         }
 
         .box {
             background-color: #1e1e1e;
-            padding: 10px;
+            padding: 15px;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             text-align: center;
             transition: transform var(--transition), box-shadow var(--transition);
         }
@@ -190,9 +183,14 @@ b<!DOCTYPE html>
 
         footer {
             text-align: center;
-            padding: 10px 0;
+            padding: 20px 0;
             background-color: #333;
-            color: var(--text-light);
+            color: var(--copyright);
+        }
+
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
         }
     </style>
 </head>
@@ -200,160 +198,82 @@ b<!DOCTYPE html>
 <body>
     <header>
         <nav class="navbar">
-            <div>
-                <a href="#home" class="nav-link">首頁</a>
-                <a href="#about" class="nav-link">關於我</a>
-                <a href="#web" class="nav-link">作品集</a>
-            </div>
+            <a href="#home" class="nav-link">首頁</a>
+            <a href="#about" class="nav-link">關於我</a>
+            <a href="#web" class="nav-link">作品集</a>
         </nav>
     </header>
     <main>
-        <section id="home" class="section visible">
+        <!-- 首頁 -->
+        <section id="home" class="section active">
             <h1>歡迎來到Bob的Hub頁面</h1>
-            <p>最近作品</p>
-            <div class="web-projects">
-                <a href='https://ericbobxd.github.io/' target="_blank">
-                    <div class="box">
-                        <img src="https://via.placeholder.com/150" alt="Project 1">
-                        <h3>C++ Blockly</h3>
-                    </div>                    
-                </a>
-                <a href='https://ericbobxd.github.io/hub' target="_blank">
-                    <div class="box">
-                        <img src="https://via.placeholder.com/150" alt="Project 1">
-                        <h3>網頁</h3>
-                    </div>                    
-                </a>
-                <a href='https://ericbobxd.github.io/mcpe.cmd-give' target="_blank">
-                    <div class="box">
-                        <img src="https://via.placeholder.com/150" alt="Project 1">
-                        <h3>/give 生成器</h3>
-                    </div>                    
-                </a>
-                <a href='https://ericbobxd.github.io/mcpe.cmd-title-tellraw-titleraw' target="_blank">
-                    <div class="box">
-                        <img src="https://via.placeholder.com/150" alt="Project 1">
-                        <h3>文本指令生成器</h3>
-                    </div>                    
-                </a>
-            </div>
-            <footer>
-                <p>&copy; 2024 Bob. All Rights Reserved.</p>
-            </footer>
+            <img src="C:/Users/user/Downloads/140780835.jpg" alt="Welcome">
+            <p>這是首頁的內容。</p>
         </section>
+
+        <!-- 關於我 -->
         <section id="about" class="section">
             <div class="timeline">
                 <div class="timeline-item">
                     <h3>2023</h3>
                     <p>參加 Minecraft X Python 程式設計課程</p>
-                </div>
-                <div class="timeline-item">
-                    <h3>2023</h3>
                     <p>生科競賽 精品獎 決賽入選</p>
                 </div>
                 <div class="timeline-item">
                     <h3>2024</h3>
                     <p>台灣仿生設計競賽高中職組競賽 全國決賽入選</p>
-                </div>
-                <div class="timeline-item">
-                    <h3>2024</h3>
                     <p>臺北市2024年STEAM 跨域龍舟競賽 第二名</p>
-                </div>
-                <div class="timeline-item">
-                    <h3>2024</h3>
                     <p>參加全國自走車競賽</p>
                 </div>
             </div>
-            <footer>
-                <p>&copy; 2024 Bob. All Rights Reserved.</p>
-            </footer>
         </section>
+
+        <!-- 作品集 -->
         <section id="web" class="section">
-            <h2>作品集</h2>
+            <h1>作品集</h1>
             <div class="web-projects">
-                <a href='https://ericbobxd.github.io/' target="_blank">
-                    <div class="box">
-                        <img src="https://via.placeholder.com/150" alt="Project 1">
-                        <h3>C++ Blockly</h3>
-                    </div>                    
-                </a>
-                <a href='https://ericbobxd.github.io/hub' target="_blank">
-                    <div class="box">
-                        <img src="https://via.placeholder.com/150" alt="Project 1">
-                        <h3>網頁</h3>
-                    </div>                    
-                </a>
-                <a href='https://ericbobxd.github.io/mcpe.cmd-give' target="_blank">
-                    <div class="box">
-                        <img src="https://via.placeholder.com/150" alt="Project 1">
-                        <h3>/give 生成器</h3>
-                    </div>                    
-                </a>
-                <a href='https://ericbobxd.github.io/mcpe.cmd-title-tellraw-titleraw' target="_blank">
-                    <div class="box">
-                        <img src="https://via.placeholder.com/150" alt="Project 1">
-                        <h3>文本指令生成器</h3>
-                    </div>                    
-                </a>
-                <a href='https://ericbobxd.github.io/UUID-Password/' target="_blank">
-                    <div class="box">
-                        <img src="https://via.placeholder.com/150" alt="Project 1">
-                        <h3>UUID密碼生成器</h3>
-                    </div>                    
-                </a>
-                <a href='https://ericbobxd.github.io/school.clothing_ai_chose/' target="_blank">
-                    <div class="box">
-                        <img src="https://via.placeholder.com/150" alt="Project 1">
-                        <h3>衣物搭配</h3>
-                    </div>                    
-                </a>
+                <div class="box">
+                    <img src="https://via.placeholder.com/150" alt="Project 1">
+                    <h3>C++ Blockly</h3>
+                </div>
+                <div class="box">
+                    <img src="https://via.placeholder.com/150" alt="Project 2">
+                    <h3>網頁</h3>
+                </div>
+                <div class="box">
+                    <img src="https://via.placeholder.com/150" alt="Project 3">
+                    <h3>/give 生成器</h3>
+                </div>
             </div>
-            <footer>
-                <p>&copy; 2024 Bob. All Rights Reserved.</p>
-            </footer>
         </section>
     </main>
+    <footer>
+        <p>&copy; 2024 Bob. All Rights Reserved. <a href="https://lit.link/en/coderexbob">About Eric</a></p>
+    </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             const links = document.querySelectorAll('.nav-link');
             const sections = document.querySelectorAll('.section');
-            const timeline = document.querySelector('#about .timeline');
-
-            // Show timeline with delay
-            setTimeout(() => {
-                timeline.classList.add('visible');
-            }, 500);
+            const timelineItems = document.querySelectorAll('.timeline-item');
 
             links.forEach(link => {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault(); // 阻止預設的跳轉行為
+                link.addEventListener('click', e => {
+                    e.preventDefault();
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
 
-                    const targetId = link.getAttribute('href').substring(1); // 取得目標區塊的 ID
-                    const targetSection = document.getElementById(targetId); // 找到目標區塊
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        section.classList.add('hidden');
+                    });
 
-                    if (targetSection) {
-                        // 隱藏所有區塊
-                        sections.forEach(section => {
-                            section.classList.remove('visible');
-                            section.style.visibility = 'hidden'; // 隱藏區塊
-                            section.style.opacity = '0'; // 設置透明度
-                        });
-
-                        // 過渡動畫後顯示目標區塊
-                        setTimeout(() => {
-                            targetSection.style.visibility = 'visible';
-                            targetSection.style.opacity = '1';
-                            setTimeout(() => {
-                                targetSection.classList.add('visible');
-                            }, 50); // 等待一點點以觸發動畫
-                        }, 500); // 確保所有動畫完成後再切換
-                    }
+                    targetSection.classList.remove('hidden');
+                    setTimeout(() => targetSection.classList.add('active'), 50);
                 });
             });
 
             // Add animations for timeline items when they appear
-            const timelineItems = document.querySelectorAll('.timeline-item');
             timelineItems.forEach((item, index) => {
                 setTimeout(() => {
                     item.classList.add('visible');
