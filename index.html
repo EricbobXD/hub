@@ -5,19 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="歡迎來到 Bob 的個人網站，展示履歷與作品集。">
   <!-- 必須保留 Google 驗證 -->
-  <meta name="google-site-verification" content="UBSf3peYSCSnzri-tdtLInew5E2Dcq-LVuVIOn-2Z6E" />
+  <meta name="google-site-verification" content="UBSf3peYSCSnzri-tdtLInew5E2Dcq-LVuVIOn-2Z6E">
   <meta name="author" content="Bob">
   <title>Bob 的個人網站</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet" media="all" onload="this.media='all';">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet"></noscript>
   <style>
+    /* 全站預設變數（首頁使用藍色系） */
     :root {
       --bg-dark: #1e1e1e;
       --text-light: #f5f5f5;
+      /* 預設為首頁藍色系 */
       --accent-color: #3498db;
       --secondary-accent: #2980b9;
-      --copyright: #bd2130;
-      --transition: 0.4s ease;
+      --transition: 0.5s ease-out;
       --header-height: 60px;
+    }
+    /* 針對分頁覆蓋配色變數 */
+    /* 履歷：紅色系 */
+    body[data-page="resume"] {
+      --accent-color: #e74c3c;
+      --secondary-accent: #c0392b;
+    }
+    /* 作品集：橘色系 */
+    body[data-page="portfolio"] {
+      --accent-color: #f39c12;
+      --secondary-accent: #e67e22;
+    }
+    /* 個人專題：綠色系 */
+    body[data-page="projects"] {
+      --accent-color: #27ae60;
+      --secondary-accent: #1e8449;
     }
     /* Reset 與全局設定 */
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,7 +49,18 @@
       position: relative;
       overflow-x: hidden;
     }
-    /* Canvas 動態背景 (粒子效果調整柔和) */
+    /* 頁面載入進度條 */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 4px;
+      background-color: var(--accent-color);
+      z-index: 2000;
+      transition: width 0.3s ease;
+    }
+    /* Canvas 粒子背景 */
     #bgCanvas {
       position: fixed;
       top: 0;
@@ -39,6 +69,11 @@
       height: 100%;
       z-index: -1;
       pointer-events: none;
+    }
+    /* 焦點提示 */
+    a:focus, button:focus {
+      outline: 2px solid var(--accent-color);
+      outline-offset: 4px;
     }
     /* Header 與導覽 */
     header {
@@ -65,11 +100,12 @@
       border-radius: 4px;
       transition: background-color var(--transition), color var(--transition);
     }
-    .navbar a:hover {
+    /* 這裡使用 var(--accent-color) 讓 hover 自動根據當前分頁主題顏色變更 */
+    .navbar a:hover, .navbar a:focus {
       background-color: var(--accent-color);
       color: var(--bg-dark);
     }
-    /* 分頁顯示與動畫效果 */
+    /* 分頁與動畫 */
     main {
       margin-top: var(--header-height);
     }
@@ -78,36 +114,36 @@
       min-height: calc(100vh - var(--header-height));
       padding: 20px;
       opacity: 0;
-      transform: translateY(20px);
+      transform: translate3d(0,20px,0);
+      transition: opacity var(--transition) ease, transform var(--transition) ease;
     }
     .page.active {
       display: block;
+      opacity: 1;
+      transform: translate3d(0,0,0);
     }
-    /* Fade Out / Fade In 動畫 */
+    /* 分頁切換動畫 */
     @keyframes fadeOut {
-      from { opacity: 1; transform: translateY(0); }
-      to { opacity: 0; transform: translateY(20px); }
+      from { opacity: 1; transform: translate3d(0,0,0); }
+      to { opacity: 0; transform: translate3d(0,20px,0); }
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translate3d(0,20px,0); }
+      to { opacity: 1; transform: translate3d(0,0,0); }
     }
-    .fade-out {
-      animation: fadeOut var(--transition) forwards;
-    }
-    .fade-in {
-      animation: fadeIn var(--transition) forwards;
-    }
-    /* 互動 scroll-triggered 動畫 */
+    .fade-out { animation: fadeOut var(--transition) forwards; }
+    .fade-in { animation: fadeIn var(--transition) forwards; }
+    /* IntersectionObserver 進場動畫 */
     .animate {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translate3d(0,20px,0);
       transition: opacity 0.6s ease, transform 0.6s ease;
     }
     .animate.visible {
       opacity: 1;
-      transform: translateY(0);
+      transform: translate3d(0,0,0);
     }
+    /* 各分頁內容（以下內容保持原有結構） */
     /* 首頁 */
     #page-home {
       text-align: center;
@@ -136,6 +172,7 @@
     .carousel-images img {
       width: 100%;
       flex-shrink: 0;
+      loading: lazy;
     }
     .carousel-nav {
       position: absolute;
@@ -143,7 +180,7 @@
       width: 100%;
       display: flex;
       justify-content: space-between;
-      transform: translateY(-50%);
+      transform: translate3d(0,-50%,0);
     }
     .carousel-nav button {
       background-color: rgba(0,0,0,0.5);
@@ -164,6 +201,10 @@
       max-width: 600px;
       margin: 20px auto;
       text-align: left;
+      background-image: url('https://via.placeholder.com/600x400?text=News+Background');
+      background-attachment: fixed;
+      background-size: cover;
+      background-position: center;
     }
     .notifications h2 {
       margin-bottom: 10px;
@@ -176,9 +217,9 @@
       transition: transform var(--transition);
     }
     .notifications li:hover {
-      transform: translateX(5px);
+      transform: translate3d(5px,0,0);
     }
-    /* 履歷頁 - 水平排版 */
+    /* 履歷頁 */
     #page-resume .profile-container {
       display: flex;
       align-items: flex-start;
@@ -196,6 +237,7 @@
       border-radius: 50%;
       object-fit: cover;
       border: 3px solid var(--accent-color);
+      loading: lazy;
     }
     #page-resume .profile-image .description {
       margin-top: 10px;
@@ -208,7 +250,9 @@
     #page-resume .profile-details h2 {
       margin-bottom: 10px;
     }
-    /* 時間軸以年分組，點擊年份下拉展開該年事件 */
+    .timeline {
+      margin-top: 20px;
+    }
     .year-group {
       margin-bottom: 20px;
       border-bottom: 1px solid var(--secondary-accent);
@@ -222,16 +266,29 @@
     .year-group h3 {
       font-size: 1.4em;
       margin-bottom: 5px;
+      position: relative;
+      padding-left: 30px;
     }
-    /* 原始的時間軸展開動畫修改 */
+    .year-group h3::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='%23e74c3c'><circle cx='10' cy='10' r='10'/></svg>") no-repeat center center;
+      background-size: contain;
+    }
     .year-group .events {
       max-height: 0;
       opacity: 0;
       overflow: hidden;
       transition: max-height 0.5s ease, opacity 0.5s ease;
+      padding-left: 20px;
     }
     .year-group.active .events {
-      max-height: 500px; /* 可根據內容長度調整 */
+      max-height: 500px;
       opacity: 1;
     }
     .year-group .events p {
@@ -245,7 +302,7 @@
       gap: 20px;
       padding: 20px 0;
     }
-    /* 作品卡片加入閱讀更多功能 */
+    /* 作品卡片 */
     .portfolio-card {
       background-color: #2c2c2c;
       border-radius: 8px;
@@ -254,11 +311,13 @@
       position: relative;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+    .portfolio-card:active {
+      transform: scale(0.98);
+    }
     .portfolio-card:hover {
       transform: scale(1.03);
       box-shadow: 0 8px 16px rgba(0,0,0,0.5);
     }
-    /* 卡片主體為連結 */
     .portfolio-card a.card-link {
       display: block;
       text-decoration: none;
@@ -268,6 +327,7 @@
     .portfolio-card a.card-link img {
       width: 100%;
       display: block;
+      loading: lazy;
     }
     .portfolio-card a.card-link h3 {
       margin-top: 10px;
@@ -279,7 +339,6 @@
       font-size: 1em;
       line-height: 1.5;
     }
-    /* 閱讀更多按鈕與展開內容 */
     .read-more {
       background-color: transparent;
       border: none;
@@ -305,8 +364,11 @@
       margin-top: 10px;
     }
     /* 個人專題頁 */
-    #page-projects { text-align: center; padding: 20px 0; }
-    /* Footer (包含聯絡資訊) */
+    #page-projects {
+      text-align: center;
+      padding: 20px 0;
+    }
+    /* Footer */
     footer {
       text-align: center;
       background-color: #333;
@@ -321,42 +383,45 @@
     footer a:hover { text-decoration: underline; }
     /* 響應式調整 */
     @media (max-width: 768px) {
+      .navbar { flex-direction: column; }
+      .navbar a { margin: 5px 0; }
       #page-resume .profile-container {
         flex-direction: column;
         align-items: center;
       }
-      .navbar { flex-direction: column; }
-      .navbar a { margin: 5px 0; }
     }
   </style>
 </head>
-<body>
-  <!-- Canvas 動態背景 -->
+<body data-page="home">
+  <!-- 頁面載入進度條 -->
+  <div id="progress-bar"></div>
+  
+  <!-- Canvas 粒子背景 -->
   <canvas id="bgCanvas"></canvas>
   
   <header>
     <nav class="navbar">
-      <a href="#home" class="nav-link" onclick="showPage('home')">首頁</a>
-      <a href="#resume" class="nav-link" onclick="showPage('resume')">履歷</a>
-      <a href="#portfolio" class="nav-link" onclick="showPage('portfolio')">作品集</a>
-      <a href="#projects" class="nav-link" onclick="showPage('projects')">個人專題</a>
+      <a href="#home" class="nav-link" onclick="showPage('home')" aria-label="首頁">首頁</a>
+      <a href="#resume" class="nav-link" onclick="showPage('resume')" aria-label="履歷">履歷</a>
+      <a href="#portfolio" class="nav-link" onclick="showPage('portfolio')" aria-label="作品集">作品集</a>
+      <a href="#projects" class="nav-link" onclick="showPage('projects')" aria-label="個人專題">個人專題</a>
     </nav>
   </header>
   
   <main>
-    <!-- 首頁 -->
-    <section id="page-home" class="page active animate">
+    <!-- 首頁（藍色系，預設） -->
+    <section id="page-home" class="page animate active">
       <h1>歡迎來到 Bob 的 Hub</h1>
       <p>這裡是一個入口大廳，提供子系統快速導航：履歷、作品集與個人專題。</p>
       <div class="carousel animate">
         <div class="carousel-images" id="carouselImages">
-          <img src="https://via.placeholder.com/800x300?text=活動1" alt="活動1">
-          <img src="https://via.placeholder.com/800x300?text=熱門專案" alt="熱門專案">
-          <img src="https://via.placeholder.com/800x300?text=活動2" alt="活動2">
+          <img src="https://via.placeholder.com/800x300?text=活動1" alt="活動1" loading="lazy">
+          <img src="https://via.placeholder.com/800x300?text=熱門專案" alt="熱門專案" loading="lazy">
+          <img src="https://via.placeholder.com/800x300?text=活動2" alt="活動2" loading="lazy">
         </div>
         <div class="carousel-nav">
-          <button id="prevBtn">&#9664;</button>
-          <button id="nextBtn">&#9654;</button>
+          <button id="prevBtn" aria-label="上一張">&#9664;</button>
+          <button id="nextBtn" aria-label="下一張">&#9654;</button>
         </div>
       </div>
       <div class="notifications animate">
@@ -369,11 +434,11 @@
       </div>
     </section>
     
-    <!-- 履歷 -->
+    <!-- 履歷（紅色系） -->
     <section id="page-resume" class="page animate">
       <div class="profile-container">
         <div class="profile-image">
-          <img src="profile.png" alt="Profile Picture">
+          <img src="profile.png" alt="Profile Picture" loading="lazy">
           <div class="description">
             我喜歡創新與跨界合作，熱衷於技術與設計的結合。
           </div>
@@ -381,7 +446,6 @@
         <div class="profile-details">
           <h2>關於我</h2>
           <p>我是 Bob，一位充滿熱情的開發者與設計師，擁有豐富的專案經驗與跨界技能，致力於打造具創新與美感的數位作品。</p>
-          <!-- 互動式時間軸 -->
           <div class="timeline">
             <div class="year-group" onclick="toggleYear(this)">
               <h3>2023</h3>
@@ -416,28 +480,28 @@
       </div>
     </section>
     
-    <!-- 作品集 -->
+    <!-- 作品集（橘色系） -->
     <section id="page-portfolio" class="page animate">
       <h2>作品集</h2>
       <div class="web-projects">
         <div class="portfolio-card">
-          <a href="https://ericbobxd.github.io/" target="_blank" class="card-link">
-            <img src="https://via.placeholder.com/200" alt="Project 1">
+          <a href="https://ericbobxd.github.io/" target="_blank" class="card-link" aria-label="前往 C++ Blockly 詳細頁">
+            <img src="https://via.placeholder.com/200" alt="Project 1" loading="lazy">
             <h3>C++ Blockly</h3>
             <p>這是一個簡短描述，點擊可進入詳細頁面。</p>
           </a>
-          <button class="read-more" onclick="toggleReadMore(event, this)">閱讀更多</button>
+          <button class="read-more" onclick="toggleReadMore(event, this)" aria-label="閱讀更多說明">閱讀更多</button>
           <div class="more-content">
             <p>這裡是更多說明內容，介紹該專案使用的技術、設計理念與實現細節。您可以在此了解項目的整體架構以及開發過程中的挑戰。</p>
           </div>
         </div>
         <div class="portfolio-card">
-          <a href="https://ericbobxd.github.io/hub" target="_blank" class="card-link">
-            <img src="https://via.placeholder.com/200" alt="Project 2">
+          <a href="https://ericbobxd.github.io/hub" target="_blank" class="card-link" aria-label="前往 網頁設計 詳細頁">
+            <img src="https://via.placeholder.com/200" alt="Project 2" loading="lazy">
             <h3>網頁設計</h3>
             <p>這是一個簡短描述，點擊可進入詳細頁面。</p>
           </a>
-          <button class="read-more" onclick="toggleReadMore(event, this)">閱讀更多</button>
+          <button class="read-more" onclick="toggleReadMore(event, this)" aria-label="閱讀更多說明">閱讀更多</button>
           <div class="more-content">
             <p>詳細介紹網頁設計專案的流程、創意思路以及前後端技術實現。</p>
           </div>
@@ -445,7 +509,7 @@
       </div>
     </section>
     
-    <!-- 個人專題 -->
+    <!-- 個人專題（綠色系） -->
     <section id="page-projects" class="page animate">
       <h2>個人專題</h2>
       <p>此區展示我的部分個人專題，點選後可查看更多細節。</p>
@@ -454,40 +518,50 @@
   
   <footer>
     <p>聯絡我：<a href="mailto:yourname@example.com">yourname@example.com</a></p>
+    <p>版本 1.0.0 - 更新日誌請參閱更新說明文件</p>
     <p>&copy; 2024 Bob. All Rights Reserved.</p>
   </footer>
   
   <script>
-    // 分頁切換：採用先 fadeOut 畫面後再切換至新頁面並 fadeIn
+    // 分頁切換：先對目前頁面添加 fade-out，再切換至新頁面並 fadeIn
     function showPage(pageId) {
-      const pages = document.querySelectorAll('.page');
-      const currentPage = document.querySelector('.page.active');
-      const targetPage = document.getElementById('page-' + pageId);
-      
-      if (currentPage && currentPage !== targetPage) {
-        currentPage.classList.add('fade-out');
-        currentPage.addEventListener('animationend', function handler() {
-          currentPage.classList.remove('active', 'fade-out');
+      try {
+        const pages = document.querySelectorAll('.page');
+        const currentPage = document.querySelector('.page.active');
+        const targetPage = document.getElementById('page-' + pageId);
+        // 更新 body 的 data-page，讓全站配色改變（包括 header 按鈕）
+        document.body.setAttribute('data-page', pageId);
+        // 更新 URL hash
+        window.location.hash = pageId;
+        if (currentPage && currentPage !== targetPage) {
+          currentPage.classList.add('fade-out');
+          setTimeout(() => {
+            currentPage.classList.remove('active', 'fade-out');
+            targetPage.classList.add('active', 'fade-in');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => {
+              targetPage.classList.remove('fade-in');
+            }, 500);
+          }, 500);
+        } else if (!currentPage) {
           targetPage.classList.add('active', 'fade-in');
-          window.scrollTo({top: 0, behavior: 'smooth'});
-          targetPage.addEventListener('animationend', function removeFade() {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          setTimeout(() => {
             targetPage.classList.remove('fade-in');
-            removeFade(); // remove listener
-          }, { once: true });
-          currentPage.removeEventListener('animationend', handler);
-        }, { once: true });
-      } else if (!currentPage) {
-        targetPage.classList.add('active', 'fade-in');
-        window.scrollTo({top: 0, behavior: 'smooth'});
-        targetPage.addEventListener('animationend', function removeFade() {
-          targetPage.classList.remove('fade-in');
-        }, { once: true });
+          }, 500);
+        }
+      } catch (e) {
+        console.error("分頁切換錯誤：", e);
       }
     }
     
     // 互動式年份展開/隱藏
     function toggleYear(element) {
-      element.classList.toggle('active');
+      try {
+        element.classList.toggle('active');
+      } catch (e) {
+        console.error("時間軸切換錯誤：", e);
+      }
     }
     
     // 輪播效果
@@ -496,21 +570,29 @@
     let currentIndex = 0;
     
     document.getElementById('prevBtn').addEventListener('click', () => {
-      currentIndex = (currentIndex - 1 + images.length) % images.length;
-      updateCarousel();
+      try {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        updateCarousel();
+      } catch (e) {
+        console.error("輪播上一張錯誤：", e);
+      }
     });
     
     document.getElementById('nextBtn').addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % images.length;
-      updateCarousel();
+      try {
+        currentIndex = (currentIndex + 1) % images.length;
+        updateCarousel();
+      } catch (e) {
+        console.error("輪播下一張錯誤：", e);
+      }
     });
     
     function updateCarousel() {
       const offset = -currentIndex * 100;
-      carouselImages.style.transform = `translateX(${offset}%)`;
+      carouselImages.style.transform = `translate3d(${offset}%, 0, 0)`;
     }
     
-    // 閱讀更多功能：切換展開/收合詳細內容
+    // 閱讀更多功能
     function toggleReadMore(event, btn) {
       event.stopPropagation();
       event.preventDefault();
@@ -526,13 +608,13 @@
           entry.target.classList.add('visible');
         }
       });
-    }, { threshold: 0.2 });
+    }, { threshold: 0.2, rootMargin: "0px 0px -50px 0px" });
     
     document.querySelectorAll('.animate').forEach(el => {
       observer.observe(el);
     });
     
-    // Canvas 粒子背景 (50 粒子，填充透明度 0.3)
+    // Canvas 粒子背景
     const canvas = document.getElementById('bgCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
@@ -585,6 +667,15 @@
     
     initParticles();
     animateParticles();
+    
+    // 模擬頁面載入進度條
+    window.addEventListener('load', () => {
+      const progressBar = document.getElementById('progress-bar');
+      progressBar.style.width = '100%';
+      setTimeout(() => {
+        progressBar.style.opacity = '0';
+      }, 500);
+    });
   </script>
 </body>
 </html>
