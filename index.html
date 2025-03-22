@@ -299,7 +299,7 @@
     #page-portfolio .web-projects {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 20px;
+      gap: 40px;
       padding: 20px 0;
     }
     /* 作品卡片 */
@@ -325,7 +325,8 @@
       padding: 15px;
     }
     .portfolio-card a.card-link img {
-      width: 100%;
+      width: 100px;
+      height: 100px;
       display: block;
       loading: lazy;
     }
@@ -440,12 +441,14 @@
         <div class="profile-image">
           <img src="assets/profile/profile.png" alt="Profile Picture" loading="lazy">
           <div class="description">
-            我喜歡創新與跨界合作，熱衷於技術與設計的結合。
+            <p>Eric bob | 𝕀ℕ𝔽𝕁-𝕋 | 天秤</p>
+            <p>◈ 看著時間流逝，感受破碎</p>
+            <p>◈ 唯一能做的，便是刻苦修行</p>
+            <p>一個對程式設計有興趣的資深菜鳥</p>
           </div>
         </div>
         <div class="profile-details">
           <h2>關於我</h2>
-          <p>我是 Bob，一位充滿熱情的開發者與設計師，擁有豐富的專案經驗與跨界技能，致力於打造具創新與美感的數位作品。</p>
           <div class="timeline">
             <div class="year-group" onclick="toggleYear(this)">
               <h3>2023</h3>
@@ -484,48 +487,73 @@
       <h2>作品集</h2>
       <div class="web-projects">
         <div class="portfolio-card">
-          <a href="https://ericbobxd.github.io/" target="_blank" class="card-link" aria-label="前往 C++ Blockly 詳細頁">
-            <img src="assets/icons/blockly.png" alt="Project 1" loading="lazy">
+          <a href="https://github.com/bosenda20000/homerun" target="_blank" class="card-link" aria-label="前往 C++ Blockly 詳細頁">
+            <img src="assets/icons/homerun.png" alt="Project 1" loading="lazy">
+            <h3>homerun</h3>
+            <p>仰望盃 專案網站</p>
+          </a>
+          <button class="read-more" onclick="toggleReadMore(event, this)" aria-label="閱讀更多說明">閱讀更多</button>
+          <div class="more-content">
+            
+            <p>EricbobXD X bosenda20000 X wee74</p>
+          </div>
+        </div>
+        <div class="portfolio-card">
+          <a href="https://ericbobxd.github.io/C_plus_plus_Blockly" target="_blank" class="card-link" aria-label="前往 C++ Blockly 詳細頁">
+            <img src="assets/icons/blockly.png" alt="Project 2" loading="lazy">
             <h3>C++ Blockly</h3>
             <p>C++ 視覺化程式設計網站</p>
           </a>
           <button class="read-more" onclick="toggleReadMore(event, this)" aria-label="閱讀更多說明">閱讀更多</button>
           <div class="more-content">
-            <p>Ericbob X Bosenda</p>
+            <p>EricbobXD X bosen-you</p>
           </div>
         </div>
         <div class="portfolio-card">
           <a href="https://ericbobxd.github.io/hub" target="_blank" class="card-link" aria-label="前往 網頁設計 詳細頁">
-            <img src="assets/icons/hub.png" alt="Project 2" loading="lazy">
+            <img src="assets/icons/hub.png" alt="Project 3" loading="lazy">
             <h3>Hub</h3>
             <p>本網站</p>
           </a>
           <button class="read-more" onclick="toggleReadMore(event, this)" aria-label="閱讀更多說明">閱讀更多</button>
           <div class="more-content">
-            <p>偏向介紹我的個人歷程</p>
+            <p>介紹我個人的歷程和作品集</p>
           </div>
         </div>
         <div class="portfolio-card">
           <a href="https://ericbobxd.github.io/mcpe.cmd-give" target="_blank" class="card-link" aria-label="前往 網頁設計 詳細頁">
-            <img src="assets/icons/give.png" alt="Project 2" loading="lazy">
+            <img src="assets/icons/give.png" alt="Project 4" loading="lazy">
             <h3>/give 生成器</h3>
             <p>基岩版專用的指令生成器</p>
           </a>
-          <button class="read-more" onclick="toggleReadMore(event, this)" aria-label="閱讀更多說明">閱讀更多</button>
-          <div class="more-content">
-            <p>Bedrock only</p>
-          </div>
         </div>
         <div class="portfolio-card">
           <a href="https://ericbobxd.github.io/mcpe.cmd-title-tellraw-titleraw" target="_blank" class="card-link" aria-label="前往 網頁設計 詳細頁">
-            <img src="assets/icons/title-tellraw-titleraw.png" alt="Project 2" loading="lazy">
+            <img src="assets/icons/title-tellraw-titleraw.png" alt="Project 5" loading="lazy">
             <h3>/title /tellraw /titleraw 生成器</h3>
             <p>基岩版專用的指令生成器</p>
           </a>
-          <button class="read-more" onclick="toggleReadMore(event, this)" aria-label="閱讀更多說明">閱讀更多</button>
-          <div class="more-content">
-            <p>Bedrock only</p>
-          </div>
+        </div>
+        <div class="portfolio-card">
+          <a href="https://ericbobxd.github.io/UUID-Password" target="_blank" class="card-link" aria-label="前往 網頁設計 詳細頁">
+            <img src="assets/icons/UUID-Password.png" alt="Project 6" loading="lazy">
+            <h3>UUID/Password 生成器</h3>
+            <p>可生成密碼/UUID 1/UUID 4</p>
+          </a>
+        </div>
+        <div class="portfolio-card">
+          <a href="https://ericbobxd.github.io/school.clothing_ai_chose" target="_blank" class="card-link" aria-label="前往 網頁設計 詳細頁">
+            <img src="assets/icons/clothing_ai_chose.png" alt="Project 7" loading="lazy">
+            <h3>智能選衣</h3>
+            <p>應該可以配出不錯看得搭配</p>
+          </a>
+        </div>
+        <div class="portfolio-card">
+          <a href="https://ericbobxd.github.io/school.meal_order_system" target="_blank" class="card-link" aria-label="前往 網頁設計 詳細頁">
+            <img src="assets/icons/meal_order_system.png" alt="Project 8" loading="lazy">
+            <h3>點餐系統</h3>
+            <p>簡單範例，並無實際功能</p>
+          </a>
         </div>
       </div>
     </section>
