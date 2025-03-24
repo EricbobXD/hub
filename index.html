@@ -325,8 +325,9 @@
       padding: 15px;
     }
     .portfolio-card a.card-link img {
-      width: 100px;
-      height: 100px;
+      width: 180px;  /* 設定固定寬度 */
+      height: 180px; /* 設定固定高度 */
+      object-fit: cover; /* 讓圖片填滿，不會變形 */
       display: block;
       loading: lazy;
     }
