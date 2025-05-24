@@ -1,737 +1,518 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="歡迎來到 Bob 的個人網站，展示履歷與作品集。">
-  <!-- 必須保留 Google 驗證 -->
-  <meta name="google-site-verification" content="UBSf3peYSCSnzri-tdtLInew5E2Dcq-LVuVIOn-2Z6E">
-  <meta name="author" content="Bob">
-  <title>Bob 的個人網站</title>
-  <link rel="shortcut icon" href="assets/icons/favicon.ico" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet" media="all" onload="this.media='all';">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet"></noscript>
-  <style>
-    /* 全站預設變數（首頁使用藍色系） */
-    :root {
-      --bg-dark: #1e1e1e;
-      --text-light: #f5f5f5;
-      /* 預設為首頁藍色系 */
-      --accent-color: #3498db;
-      --secondary-accent: #2980b9;
-      --transition: 0.5s ease-out;
-      --header-height: 60px;
-    }
-    /* 針對分頁覆蓋配色變數 */
-    /* 履歷：紅色系 */
-    body[data-page="about"] {
-      --accent-color: #e74c3c;
-      --secondary-accent: #c0392b;
-    }
-    /* 作品集：橘色系 */
-    body[data-page="portfolio"] {
-      --accent-color: #f39c12;
-      --secondary-accent: #e67e22;
-    }
-    /* 個人專題：綠色系 */
-    body[data-page="projects"] {
-      --accent-color: #27ae60;
-      --secondary-accent: #1e8449;
-    }
-    /* Reset 與全局設定 */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    html, body { min-height: 100%; }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--bg-dark);
-      color: var(--text-light);
-      position: relative;
-      overflow-x: hidden;
-    }
-    /* 頁面載入進度條 */
-    #progress-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 0%;
-      height: 4px;
-      background-color: var(--accent-color);
-      z-index: 2000;
-      transition: width 0.3s ease;
-    }
-    /* Canvas 粒子背景 */
-    #bgCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      pointer-events: none;
-    }
-    /* 焦點提示 */
-    a:focus, button:focus {
-      outline: 2px solid var(--accent-color);
-      outline-offset: 4px;
-    }
-    /* Header 與導覽 */
-    header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background-color: #333;
-      z-index: 1000;
-      height: var(--header-height);
-      display: flex;
-      align-items: center;
-      padding: 0 20px;
-    }
-    .navbar {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-    }
-    .navbar a {
-      color: var(--text-light);
-      text-decoration: none;
-      margin: 0 10px;
-      padding: 8px 12px;
-      border-radius: 4px;
-      transition: background-color var(--transition), color var(--transition);
-    }
-    /* 這裡使用 var(--accent-color) 讓 hover 自動根據當前分頁主題顏色變更 */
-    .navbar a:hover, .navbar a:focus {
-      background-color: var(--accent-color);
-      color: var(--bg-dark);
-    }
-    /* 分頁與動畫 */
-    main {
-      margin-top: var(--header-height);
-    }
-    .page {
-      display: none;
-      min-height: calc(100vh - var(--header-height));
-      padding: 20px;
-      opacity: 0;
-      transform: translate3d(0,20px,0);
-      transition: opacity var(--transition) ease, transform var(--transition) ease;
-    }
-    .page.active {
-      display: block;
-      opacity: 1;
-      transform: translate3d(0,0,0);
-    }
-    /* 分頁切換動畫 */
-    @keyframes fadeOut {
-      from { opacity: 1; transform: translate3d(0,0,0); }
-      to { opacity: 0; transform: translate3d(0,20px,0); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translate3d(0,20px,0); }
-      to { opacity: 1; transform: translate3d(0,0,0); }
-    }
-    .fade-out { animation: fadeOut var(--transition) forwards; }
-    .fade-in { animation: fadeIn var(--transition) forwards; }
-    /* IntersectionObserver 進場動畫 */
-    .animate {
-      opacity: 0;
-      transform: translate3d(0,20px,0);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .animate.visible {
-      opacity: 1;
-      transform: translate3d(0,0,0);
-    }
-    /* 各分頁內容（以下內容保持原有結構） */
-    /* 首頁 */
-    #page-home {
-      text-align: center;
-    }
-    #page-home h1 {
-      font-size: 2.5em;
-      margin-bottom: 10px;
-    }
-    #page-home p {
-      margin-bottom: 30px;
-      font-size: 1.1em;
-    }
-    /* 輪播區 */
-    .carousel {
-      position: relative;
-      width: 100%;
-      max-width: 800px;
-      margin: 20px auto;
-      overflow: hidden;
-      border-radius: 8px;
-    }
-    .carousel-images {
-      display: flex;
-      transition: transform 0.8s ease;
-    }
-    .carousel-images img {
-      width: 100%;
-      flex-shrink: 0;
-    }
-    .carousel-nav {
-      position: absolute;
-      top: 50%;
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      transform: translate3d(0,-50%,0);
-    }
-    .carousel-nav button {
-      background-color: rgba(0,0,0,0.5);
-      border: none;
-      color: var(--text-light);
-      padding: 10px;
-      cursor: pointer;
-      border-radius: 50%;
-      transition: background-color var(--transition);
-    }
-    .carousel-nav button:hover {
-      background-color: var(--accent-color);
-    }
-    .notifications {
-      background-color: #2c2c2c;
-      padding: 15px;
-      border-radius: 8px;
-      max-width: 600px;
-      margin: 20px auto;
-      text-align: left;
-      background-image: url('https://via.placeholder.com/600x400?text=News+Background');
-      background-attachment: fixed;
-      background-size: cover;
-      background-position: center;
-    }
-    .notifications h2 {
-      margin-bottom: 10px;
-    }
-    .notifications ul {
-      list-style: disc inside;
-    }
-    .notifications li {
-      margin-bottom: 5px;
-      transition: transform var(--transition);
-    }
-    .notifications li:hover {
-      transform: translate3d(5px,0,0);
-    }
-    /* 履歷頁 */
-    #page-about .profile-container {
-      display: flex;
-      align-items: flex-start;
-      gap: 20px;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-    }
-    #page-about .profile-image {
-      flex-shrink: 0;
-      text-align: center;
-    }
-    #page-about .profile-image img {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid var(--accent-color);
-    }
-    #page-about .profile-image .description {
-      margin-top: 10px;
-      font-size: 0.9em;
-      color: #cccccc;
-    }
-    #page-about .profile-details {
-      flex: 1;
-    }
-    #page-about .profile-details h2 {
-      margin-bottom: 10px;
-    }
-    .timeline {
-      margin-top: 20px;
-    }
-    .year-group {
-      margin-bottom: 20px;
-      border-bottom: 1px solid var(--secondary-accent);
-      padding-bottom: 10px;
-      cursor: pointer;
-      transition: background-color var(--transition);
-    }
-    .year-group:hover {
-      background-color: rgba(219, 119, 52, 0.1);
-    }
-    .year-group h3 {
-      font-size: 1.4em;
-      margin-bottom: 5px;
-      position: relative;
-      padding-left: 30px;
-    }
-    .year-group h3::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 20px;
-      height: 20px;
-      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='%23e74c3c'><circle cx='10' cy='10' r='10'/></svg>") no-repeat center center;
-      background-size: contain;
-    }
-    .year-group .events {
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-      transition: max-height 0.5s ease, opacity 0.5s ease;
-      padding-left: 20px;
-    }
-    .year-group.active .events {
-      max-height: 500px;
-      opacity: 1;
-    }
-    .year-group .events p {
-      margin: 5px 0;
-      font-size: 1em;
-    }
-    /* 作品集頁 */
-    #page-portfolio .web-projects {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 40px;
-      padding: 20px 0;
-    }
-    /* 作品卡片 */
-    .portfolio-card {
-      background-color: #2c2c2c;
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 20px;
-      position: relative;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .portfolio-card:active {
-      transform: scale(0.98);
-    }
-    .portfolio-card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.5);
-    }
-    .portfolio-card a.card-link {
-      display: block;
-      text-decoration: none;
-      color: inherit;
-      padding: 15px;
-    }
-    .portfolio-card a.card-link img {
-      width: 180px;  /* 設定固定寬度 */
-      height: 180px; /* 設定固定高度 */
-      object-fit: cover; /* 讓圖片填滿，不會變形 */
-      border-radius: 8px; /* 圖片圓角（可選） */
-      display: block;
-    }
-    .portfolio-card a.card-link h3 {
-      margin-top: 10px;
-      font-size: 1.4em;
-      text-align: center;
-    }
-    .portfolio-card a.card-link p {
-      margin-top: 10px;
-      font-size: 1em;
-      line-height: 1.5;
-    }
-    .read-more {
-      background-color: transparent;
-      border: none;
-      color: var(--accent-color);
-      cursor: pointer;
-      padding: 10px 15px;
-      font-size: 1em;
-      transition: color 0.3s ease;
-      width: 100%;
-      text-align: center;
-    }
-    .read-more:hover {
-      color: var(--secondary-accent);
-    }
-    .more-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.5s ease;
-      padding: 0 15px;
-    }
-    .more-content.open {
-      max-height: 200px;
-      margin-top: 10px;
-    }
-    /* 個人專題頁 */
-    #page-projects {
-      text-align: center;
-      padding: 20px 0;
-    }
-    /* Footer */
-    footer {
-      text-align: center;
-      background-color: #333;
-      padding: 10px 20px;
-      font-size: 0.9em;
-    }
-    footer p { margin-bottom: 5px; }
-    footer a {
-      color: var(--accent-color);
-      text-decoration: none;
-    }
-    footer a:hover { text-decoration: underline; }
-    /* 響應式調整 */
-    @media (max-width: 768px) {
-      .navbar { flex-direction: column; }
-      .navbar a { margin: 5px 0; }
-      #page-about .profile-container {
-        flex-direction: column;
-        align-items: center;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Eric Bob｜個人網頁</title>
+    <!-- 必須保留 Google 驗證 -->
+    <meta name="google-site-verification" content="UBSf3peYSCSnzri-tdtLInew5E2Dcq-LVuVIOn-2Z6E">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+            font-family: Arial, sans-serif;
+            background: #121212;
+            color: #eee;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 0 20px;
+            box-sizing: border-box;
+            z-index: 300;
+        }
+
+        header h1 {
+            font-size: 1.2rem;
+            white-space: nowrap;
+            color: #ccc;
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+        }
+
+        nav a {
+            color: #fff;
+            margin: 0 10px;
+            font-size: 1rem;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 100%;
+            height: 2px;
+            background: #fff;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s;
+        }
+
+        nav a:hover {
+            color: aquamarine;
+        }
+
+        nav a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        section {
+            width: 100%;
+            min-height: 100vh;
+            padding-top: 60px;
+            box-sizing: border-box;
+        }
+
+        .content-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.8;
+        }
+
+        .hub,
+        .about,
+        .portfolio {
+            background: #1e1e1e;
+        }
+
+        .hub {
+            display: none;
+        }
+
+        .hub.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .hub .intro {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .hub .intro h1 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+        }
+
+        .hub .intro p {
+            font-size: 1.1rem;
+            color: #ccc;
+        }
+
+        .hub .buttons {
+            margin-top: 30px;
+        }
+
+        .hub .buttons a {
+            background: #444;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 8px;
+            color: #fff;
+            transition: background 0.3s;
+        }
+
+        .hub .buttons a:hover {
+            background: #666;
+            color: rgb(127, 212, 255);
+        }
+
+        .about,
+        .portfolio {
+            display: none;
+        }
+
+        .about.active,
+        .portfolio.active {
+            display: block;
+        }
+
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .avatar-box {
+            flex: 1;
+            text-align: center;
+        }
+
+        .avatar-box img {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            margin-bottom: 10px;
+        }
+
+        .avatar-box p {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #ccc;
+        }
+
+        .avatar-box .bio-text {
+            margin-top: 12px;
+            text-align: left;
+            color: #eee;
+        }
+
+        .details-box {
+            flex: 2;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0 30px;
+        }
+
+        .skill-tag {
+            background: #333;
+            padding: 8px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+
+        .timeline-carousel {
+            position: relative;
+            width: 150%;
+            max-width: 600px;
+            margin: 0 auto;
+            overflow: hidden;
+            background: #1a1a1a;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .timeline-track {
+            padding: 30px;
+            display: flex;
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .timeline-item {
+            flex: 0 0 100%;
+            box-sizing: border-box;
+            padding: 0 50px;
+            text-align: left;
+        }
+
+        .timeline-item h3 {
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .timeline-item h3 i {
+            margin-right: 10px;
+        }
+
+        .timeline-item p {
+            margin: 4px 0;
+            font-size: 1rem;
+            color: #ccc;
+        }
+
+        .timeline-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            color: white;
+            padding: 10px 14px;
+            cursor: pointer;
+            z-index: 9999;
+            border-radius: 4px;
+        }
+
+        .timeline-nav.left {
+        left: 0;
+        }
+        .timeline-nav.right {
+        right: 0;
+        }
+
+
+        .web-projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .portfolio-card {
+            background: #2c2c2c;
+            padding: 20px;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .portfolio-card:hover {
+            color: rgb(255, 227, 127);
+            transform: scale(1.03);
+        }
+
+        .portfolio-card h3 {
+            margin: 0 0 8px;
+        }
+
+        .portfolio-card p {
+            font-size: 1em;
+        }
+
+        .portfolio-card:hover {
+            transform: scale(1.03);
+            color: rgb(255, 227, 127);
+        }
+
+        .portfolio-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background: #333;
+            color: #ccc;
+            text-align: center;
+            padding: 10px 20px;
+        }
+
+        .toast {
+            position: fixed;
+            top: -100px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 24px;
+            background: #222;
+            border-radius: 8px;
+            opacity: 1;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 1001;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            transform: translateY(120px);
+        }
+    </style>
 </head>
-<body data-page="home">
-  <!-- 頁面載入進度條 -->
-  <div id="progress-bar"></div>
-  
-  <!-- Canvas 粒子背景 -->
-  <canvas id="bgCanvas"></canvas>
-  
-  <header>
-    <nav class="navbar">
-      <a href="#home" class="nav-link" onclick="showPage('home')" aria-label="首頁">首頁</a>
-      <a href="#about" class="nav-link" onclick="showPage('about')" aria-label="履歷">履歷</a>
-      <a href="#portfolio" class="nav-link" onclick="showPage('portfolio')" aria-label="作品集">作品集</a>
-      <a href="#projects" class="nav-link" onclick="showPage('projects')" aria-label="個人專題">個人專題</a>
-    </nav>
-  </header>
-  
-  <main>
-    <!-- 首頁（藍色系，預設） -->
-    <section id="page-home" class="page animate active">
-      <h1>歡迎來到 Bob 的 Hub</h1>
-      <p>這裡是一個入口大廳，提供子系統快速導航：履歷、作品集與個人專題。</p>
-      <div class="carousel animate">
-        <div class="carousel-images" id="carouselImages">
-          <img src="https://via.placeholder.com/800x300?text=活動1" alt="活動1" loading="lazy">
-          <img src="https://via.placeholder.com/800x300?text=熱門專案" alt="熱門專案" loading="lazy">
-          <img src="https://via.placeholder.com/800x300?text=活動2" alt="活動2" loading="lazy">
+
+<body>
+    <div class="toast" id="toast">
+        <img src="https://raw.githubusercontent.com/EricbobXD/hub/main/assets/icons/title-tellraw-titleraw.gif" style="height: 64px; width: 64px;" alt="icon">
+        <div class="text">
+            <div style="color: gold;"><strong>Achievement Get!</strong></div>
+            <div style="color: cornflowerblue;"><span>歡迎來到 Eric 的網頁 :D</span></div>
         </div>
-        <div class="carousel-nav">
-          <button id="prevBtn" aria-label="上一張">&#9664;</button>
-          <button id="nextBtn" aria-label="下一張">&#9654;</button>
-        </div>
-      </div>
-      <div class="notifications animate">
-        <h2>最新消息</h2>
-        <ul>
-          <li>【活動公告】即將舉辦線上直播講座</li>
-          <li>【更新資訊】網站介面全新改版中</li>
-          <li>【通知】新專案上線，敬請期待！</li>
-        </ul>
-      </div>
-    </section>
-    
-    <!-- 履歷（紅色系） -->
-    <section id="page-about" class="page animate">
-      <div class="profile-container">
-        <div class="profile-image">
-          <img src="assets/profile/profile.png" alt="Profile Picture" loading="lazy">
-          <div class="description">
-            <p>Eric bob | 𝕀ℕ𝔽𝕁-𝕋 | 天秤</p>
-            <p>◈ 看著時間流逝，感受破碎</p>
-            <p>◈ 唯一能做的，便是刻苦修行</p>
-            <p>一個對程式設計有興趣的資深菜鳥</p>
-          </div>
-        </div>
-        <div class="profile-details">
-          <h2>關於我</h2>
-          <div class="timeline">
-            <div class="year-group" onclick="toggleYear(this)">
-              <h3>2023</h3>
-              <div class="events">
-                <p>參加 Minecraft X Python 程式設計課程</p>
-                <p>生科競賽 精品獎 決賽入選</p>
-              </div>
+    </div>
+    <header>
+        <h1>Eric Bob</h1>
+        <nav>
+            <a href="#" onclick="showPage('home');return false;">首頁</a>
+            <a href="#" onclick="showPage('about');return false;">關於我</a>
+            <a href="#" onclick="showPage('portfolio');return false;">作品集</a>
+        </nav>
+    </header>
+
+    <section id="home" class="hub">
+        <div class="content-container">
+            <div class="intro">
+                <h1>從好奇出發，讓創意落地</h1>
+                <p>探索我如何將技術與創意轉化成具體的作品與影響力。</p>
+                <div class="buttons">
+                    <a href="#" onclick="showPage('about');return false;">關於我</a>
+                    <a href="#" onclick="showPage('portfolio');return false;">作品集</a>
+                </div>
             </div>
-            <div class="year-group" onclick="toggleYear(this)">
-              <h3>2024</h3>
-              <div class="events">
-                <p>台灣仿生設計競賽高中職組全國決賽入選</p>
-                <p>臺北市2024年STEAM 跨域龍舟競賽 第二名</p>
-                <p>APCS 1/1</p>
-                <p>參加全國自走車競賽</p>
-                <p>通過仰望盃初賽</p>
-              </div>
-            </div>
-            <div class="year-group" onclick="toggleYear(this)">
-              <h3>2025</h3>
-              <div class="events">
-                <p>APCS 1/3</p>
-                <p>仰望盃 進入複賽</p>
-                <p>參加 TOI 初試</p>
-                <p>參加 中學生網站小論文</p>
-                <p>仰望盃 進入決賽</p>
-                <p>參加 成大邀請賽</p>
-                <p>APCS -/-</p>
-              </div>
-            </div>
-            <div class="year-group" onclick="toggleYear(this)">
-              <h3>2026</h3>
-              <div class="events">
-                <p>2026 sitcon</p>
-                <p>APCS -/-</p>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
     </section>
-    
-    <!-- 作品集（橘色系） -->
-    <section id="page-portfolio" class="page animate">
-      <h2>作品集</h2>
-      <div class="web-projects">
-        <div class="portfolio-card">
-          <a href="https://github.com/EricbobXD/homerun" target="_blank" class="card-link" aria-label="前往 C++ Blockly 詳細頁">
-            <img src="assets/icons/home_run.png" alt="Project 1" loading="lazy">
-            <h3>homerun</h3>
-            <p>仰望盃 專案網站</p>
-          </a>
-          <button class="read-more" onclick="toggleReadMore(event, this)" aria-label="閱讀更多說明">閱讀更多</button>
-          <div class="more-content">
-            
-            <p>EricbobXD X bosenda20000 X wee74</p>
-          </div>
+
+    <section id="about" class="about">
+        <div class="content-container">
+            <div class="about-content">
+                <div class="avatar-box">
+                    <img src="https://raw.githubusercontent.com/EricbobXD/hub/main/assets/profile/profile.png" alt="avatar">
+                    <div class="bio-text">
+                        <p>𝕀ℕ𝔽𝕁-𝕋 | ♎作家 | 前端工程師</p>
+                        <p>就一個瘋瘋的內耗仔;)</p>
+                        <p>喜歡動手實作一些想法</p>
+                    </div>
+                </div>
+                <div class="details-box">
+                    <h2>技能</h2>
+                    <div class="skill-tags">
+                        <span class="skill-tag"><i class="fa-solid fa-file-code"></i> JSON</span>
+                        <span class="skill-tag"><i class="fab fa-python"></i> Python</span>
+                        <span class="skill-tag"><i class="fas fa-code"></i> HTML</span>
+                        <span class="skill-tag"><i class="fab fa-js"></i> JavaScript</span>
+                    </div>
+
+                    <h2>個人經歷</h2>
+                    <div class="timeline-carousel">
+                        <button class="timeline-nav left" onclick="moveTimeline(-1)">&#9664;</button>
+                        <div class="timeline-track" id="timelineTrack">
+                            <div class="timeline-item">
+                                <h3><i class="fas fa-book-open"> 程式競賽、程式檢定</i></h3>
+                                <p>APCS 1/3</p>
+                                <p>成大邀請賽 進入決賽</p>
+                                <p>參加 TOI 初試</p>
+                                <p>參加 CPE 大學程式能力檢定</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h3><i class="fas fa-trophy"> 其他競賽經歷</i></h3>
+                                <p>生科競賽 精品獎 決賽入選 全國第八名</p>
+                                <p>臺北市 2024 年 STEAM 跨域龍舟競賽 第二名</p>
+                                <p>2025 仰望盃全國科學 HomeRun 實作大賽 銅牌獎 第六名</p>
+                                <p>中學生網站小論文 甲等</p>
+                                <p>參加 全國自走車競賽</p>
+                                <p>參加 南方創客基地 創客松競賽</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h3><i class="fas fa-tools"> 參與課程</i></h3>
+                                <p>參加 學校暑期 C++ 程式設計課程 </p>
+                                <p>參加 Minecraft x Python 程式設計課程</p>
+                                <p>參加 人生設計 & 職涯探索課程</p>
+                                <p>參加 【電子系】銘傳大學電機工程學系-高中體驗營</p>
+                                <p>參加 AI Agent 共學實驗室</p>
+                                <p>參加  臺北市政府青年局114年度「青春起航─社團事務培訓營」</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h3><i class="fa-brands fa-youtube"> Youtube 頻道經營</i></h3>
+                                <p>總點閱率：11.4 萬</p>
+                                <p>觀看時數：800+ 小時</p>
+                                <p>訂閱者數：197</p>
+                                <p>頻道連結：https://www.youtube.com/@ericbob_metro</p>
+                            </div>
+                        </div>
+                        <button class="timeline-nav right" onclick="moveTimeline(1)">&#9654;</button>
+                    </div>
+
+                </div>
+            </div>
         </div>
-        <div class="portfolio-card">
-          <a href="https://ericbobxd.github.io/C_plus_plus_Blockly" target="_blank" class="card-link" aria-label="前往 C++ Blockly 詳細頁">
-            <img src="assets/icons/blockly.png" alt="Project 2" loading="lazy">
-            <h3>C++ Blockly</h3>
-            <p>C++ 視覺化程式設計網站</p>
-          </a>
-          <button class="read-more" onclick="toggleReadMore(event, this)" aria-label="閱讀更多說明">閱讀更多</button>
-          <div class="more-content">
-            <p>EricbobXD X bosen-you</p>
-          </div>
         </div>
-        <div class="portfolio-card">
-          <a href="https://ericbobxd.github.io/hub" target="_blank" class="card-link" aria-label="前往 網頁設計 詳細頁">
-            <img src="assets/icons/hub.png" alt="Project 3" loading="lazy">
-            <h3>Hub</h3>
-            <p>本網站</p>
-          </a>
-          <button class="read-more" onclick="toggleReadMore(event, this)" aria-label="閱讀更多說明">閱讀更多</button>
-          <div class="more-content">
-            <p>介紹我個人的歷程和作品集</p>
-          </div>
-        </div>
-        <div class="portfolio-card">
-          <a href="https://ericbobxd.github.io/mcpe.cmd-give" target="_blank" class="card-link" aria-label="前往 網頁設計 詳細頁">
-            <img src="assets/icons/cmd_give.png" alt="Project 4" loading="lazy">
-            <h3>/give 生成器</h3>
-            <p>基岩版專用的指令生成器</p>
-          </a>
-        </div>
-        <div class="portfolio-card">
-          <a href="https://ericbobxd.github.io/mcpe.cmd-title-tellraw-titleraw" target="_blank" class="card-link" aria-label="前往 網頁設計 詳細頁">
-            <img src="assets/icons/title-tellraw-titleraw.gif" alt="Project 5" loading="lazy">
-            <h3>/title /tellraw /titleraw 生成器</h3>
-            <p>基岩版專用的指令生成器</p>
-          </a>
-        </div>
-        <div class="portfolio-card">
-          <a href="https://ericbobxd.github.io/UUID-Password" target="_blank" class="card-link" aria-label="前往 網頁設計 詳細頁">
-            <img src="assets/icons/UUID-Password.png" alt="Project 6" loading="lazy">
-            <h3>UUID/PSD 生成器</h3>
-            <p>可生成[密碼 / UUID 1 / UUID 4]</p>
-          </a>
-        </div>
-        <div class="portfolio-card">
-          <a href="https://ericbobxd.github.io/school.clothing_ai_chose" target="_blank" class="card-link" aria-label="前往 網頁設計 詳細頁">
-            <img src="assets/icons/cloth_ai_chose.png" alt="Project 7" loading="lazy">
-            <h3>智能選衣模擬器</h3>
-            <p>減少你思考的好東西</p>
-          </a>
-        </div>
-        <div class="portfolio-card">
-          <a href="https://ericbobxd.github.io/school.meal_order_system" target="_blank" class="card-link" aria-label="前往 網頁設計 詳細頁">
-            <img src="assets/icons/meal_order_system.png" alt="Project 8" loading="lazy">
-            <h3>點餐系統</h3>
-            <p>範例，無實際功能</p>
-          </a>
-        </div>
-      </div>
     </section>
-    
-    <!-- 個人專題（綠色系） -->
-    <section id="page-projects" class="page animate">
-      <h2>個人專題</h2>
-      <p>此區展示我的部分個人專題，點選後可查看更多細節。</p>
+
+    <section id="portfolio" class="portfolio">
+        <div class="content-container">
+            <h1 style="text-align:center;">作品展示</h1>
+            <div class="web-projects">
+            <a class="portfolio-card" href="https://github.com/EricbobXD/homerun" target="_blank">
+                <img src="assets/icons/home_run.png" alt="">
+                <h3>homerun</h3>
+                <p>仰望盃 專案網站</p>
+            </a>
+            <a class="portfolio-card" href="https://ericbobxd.github.io/C_plus_plus_Blockly" target="_blank">
+                <img src="assets/icons/blockly.png" alt="">
+                <h3>C++ Blockly</h3>
+                <p>C++ 視覺化程式設計網站</p>
+            </a>
+            <a class="portfolio-card" href="https://ericbobxd.github.io/hub" target="_blank">
+                <img src="assets/icons/hub.png" alt="">
+                <h3>Hub</h3>
+                <p>本網站</p>
+            </a>
+            <a class="portfolio-card" href="https://ericbobxd.github.io/mcpe.cmd-give" target="_blank">
+                <img src="assets/icons/cmd_give.png" alt="">
+                <h3>/give 生成器</h3>
+                <p>基岩版專用的指令生成器</p>
+            </a>
+            <a class="portfolio-card" href="https://ericbobxd.github.io/mcpe.cmd-title-tellraw-titleraw" target="_blank">
+                <img src="assets/icons/title-tellraw-titleraw.gif" alt="">
+                <h3>/title /tellraw /titleraw 生成器</h3>
+                <p>基岩版專用的指令生成器</p>
+            </a>
+            <a class="portfolio-card" href="https://ericbobxd.github.io/UUID-Password" target="_blank">
+                <img src="assets/icons/UUID-Password.png" alt="">
+                <h3>UUID/PSD 生成器</h3>
+                <p>可生成[密碼 / UUID 1 / UUID 4]</p>
+            </a>
+            <a class="portfolio-card" href="https://ericbobxd.github.io/school.clothing_ai_chose" target="_blank">
+                <img src="assets/icons/cloth_ai_chose.png" alt="">
+                <h3>智能選衣模擬器</h3>
+                <p>減少你思考的好東西</p>
+            </a>
+            <a class="portfolio-card" href="https://ericbobxd.github.io/school.meal_order_system" target="_blank">
+                <img src="assets/icons/meal_order_system.png" alt="">
+                <h3>點餐系統</h3>
+                <p>範例，無實際功能</p>
+            </a>
+            <!-- 可繼續增加更多卡片 -->
+            </div>
+        </div>
     </section>
-  </main>
-  
-  <footer>
-    <p>聯絡我：<a href="mailto:eric10955006@gmail.com">eric10955006@gmail.com</a></p>
-    <p>&copy; 2024 Bob. All Rights Reserved.</p>
-  </footer>
-  
-  <script>
-    // 分頁切換：先對目前頁面添加 fade-out，再切換至新頁面並 fadeIn
-    function showPage(pageId) {
-      try {
-        const pages = document.querySelectorAll('.page');
-        const currentPage = document.querySelector('.page.active');
-        const targetPage = document.getElementById('page-' + pageId);
-        // 更新 body 的 data-page，讓全站配色改變（包括 header 按鈕）
-        document.body.setAttribute('data-page', pageId);
-        // 更新 URL hash
-        window.location.hash = pageId;
-        if (currentPage && currentPage !== targetPage) {
-          currentPage.classList.add('fade-out');
-          setTimeout(() => {
-            currentPage.classList.remove('active', 'fade-out');
-            targetPage.classList.add('active', 'fade-in');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    <footer>
+        <p>&copy; 2024 Eric Bob. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        function showPage(id) {
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+        window.addEventListener('DOMContentLoaded', () => {
+            showPage('home');
             setTimeout(() => {
-              targetPage.classList.remove('fade-in');
-            }, 500);
-          }, 500);
-        } else if (!currentPage) {
-          targetPage.classList.add('active', 'fade-in');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          setTimeout(() => {
-            targetPage.classList.remove('fade-in');
-          }, 500);
-        }
-      } catch (e) {
-        console.error("分頁切換錯誤：", e);
-      }
-    }
-    
-    // 互動式年份展開/隱藏
-    function toggleYear(element) {
-      try {
-        element.classList.toggle('active');
-      } catch (e) {
-        console.error("時間軸切換錯誤：", e);
-      }
-    }
-    
-    // 輪播效果
-    const carouselImages = document.getElementById('carouselImages');
-    const images = carouselImages.querySelectorAll('img');
-    let currentIndex = 0;
-    
-    document.getElementById('prevBtn').addEventListener('click', () => {
-      try {
-        currentIndex = (currentIndex - 1 + images.length) % images.length;
-        updateCarousel();
-      } catch (e) {
-        console.error("輪播上一張錯誤：", e);
-      }
-    });
-    
-    document.getElementById('nextBtn').addEventListener('click', () => {
-      try {
-        currentIndex = (currentIndex + 1) % images.length;
-        updateCarousel();
-      } catch (e) {
-        console.error("輪播下一張錯誤：", e);
-      }
-    });
-    
-    function updateCarousel() {
-      const offset = -currentIndex * 100;
-      carouselImages.style.transform = `translate3d(${offset}%, 0, 0)`;
-    }
-    
-    // 閱讀更多功能
-    function toggleReadMore(event, btn) {
-      event.stopPropagation();
-      event.preventDefault();
-      const moreContent = btn.nextElementSibling;
-      moreContent.classList.toggle('open');
-      btn.textContent = moreContent.classList.contains('open') ? '收合內容' : '閱讀更多';
-    }
-    
-    // IntersectionObserver 觸發進場動畫
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.2, rootMargin: "0px 0px -50px 0px" });
-    
-    document.querySelectorAll('.animate').forEach(el => {
-      observer.observe(el);
-    });
-    
-    // Canvas 粒子背景
-    const canvas = document.getElementById('bgCanvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    const particleCount = 50;
-    
-    function setCanvasSize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    setCanvasSize();
-    window.addEventListener('resize', setCanvasSize);
-    
-    class Particle {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.radius = Math.random() * 2 + 1;
-        this.speedX = Math.random() * 0.3 - 0.15;
-        this.speedY = Math.random() * 0.3 - 0.15;
-      }
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-      }
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
-        ctx.fill();
-      }
-    }
-    
-    function initParticles() {
-      particles = [];
-      for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
-      }
-    }
-    
-    function animateParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
-        p.update();
-        p.draw();
-      });
-      requestAnimationFrame(animateParticles);
-    }
-    
-    initParticles();
-    animateParticles();
-    
-    // 模擬頁面載入進度條
-    window.addEventListener('load', () => {
-      const progressBar = document.getElementById('progress-bar');
-      progressBar.style.width = '100%';
-      setTimeout(() => {
-        progressBar.style.opacity = '0';
-      }, 500);
-    });
-  </script>
+                const t = document.getElementById('toast');
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 4000);
+            }, 1500);
+        });
+
+        let currentIndex = 0;
+
+        function moveTimeline(direction) {
+            const track = document.getElementById("timelineTrack");
+            const items = track.children;
+            const maxIndex = items.length - 1;
+            currentIndex = Math.max(0, Math.min(maxIndex, currentIndex + direction));
+            const offset = currentIndex * 100;
+            track.style.transform = `translateX(-${offset}%)`;
+        };
+    </script>
 </body>
+
 </html>
