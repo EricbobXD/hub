@@ -1,317 +1,520 @@
-diff --git a/index.html b/index.html
-index 7b3ea4771fbbb97e3ab55ed34d201fc12f12ad1e..1a5e9a5733053c916e2af5abd4a9e800e8b4c1c1 100644
---- a/index.html
-+++ b/index.html
-@@ -186,57 +186,57 @@
-             text-align: left;
-             color: #eee;
-         }
- 
-         .details-box {
-             flex: 2;
-         }
- 
-         .skill-tags {
-             display: flex;
-             flex-wrap: wrap;
-             gap: 10px;
-             margin: 15px 0 30px;
-         }
- 
-         .skill-tag {
-             background: #333;
-             padding: 8px 12px;
-             border-radius: 20px;
-             display: flex;
-             align-items: center;
-             gap: 8px;
-         }
- 
- 
--        .timeline-carousel {
--            position: relative;
--            width: 150%;
--            max-width: 600px;
--            margin: 0 auto;
--            overflow: hidden;
--            background: #1a1a1a;
-+        .timeline-carousel {
-+            position: relative;
-+            width: 100%;
-+            max-width: 600px;
-+            margin: 0 auto;
-+            overflow: hidden;
-+            background: #1a1a1a;
-             border-radius: 12px;
-             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-         }
- 
-         .timeline-track {
-             padding: 30px;
-             display: flex;
-             transition: transform 0.6s ease-in-out;
-         }
- 
-         .timeline-item {
-             flex: 0 0 100%;
-             box-sizing: border-box;
-             padding: 0 50px;
-             text-align: left;
-         }
- 
-         .timeline-item h3 {
-             font-size: 1.3rem;
-             display: flex;
-             align-items: center;
-             margin-bottom: 10px;
-         }
- 
-         .timeline-item h3 i {
-@@ -277,127 +277,122 @@
-             gap: 20px;
-         }
- 
-         .portfolio-card {
-             background: #2c2c2c;
-             padding: 20px;
-             border-radius: 8px;
-             transition: transform 0.3s ease;
-             text-align: center;
-             color: inherit;
-         }
- 
-         .portfolio-card:hover {
-             color: rgb(255, 227, 127);
-             transform: scale(1.03);
-         }
- 
-         .portfolio-card h3 {
-             margin: 0 0 8px;
-         }
- 
-         .portfolio-card p {
-             font-size: 1em;
-         }
- 
--        .portfolio-card:hover {
--            transform: scale(1.03);
--            color: rgb(255, 227, 127);
--        }
--
--        .portfolio-card img {
--            width: 150px;
--            height: 150px;
--            object-fit: cover;
-+        .portfolio-card img {
-+            width: 150px;
-+            height: 150px;
-+            object-fit: cover;
-             border-radius: 6px;
-             margin-bottom: 10px;
-         }
- 
-         footer {
-             background: #333;
-             color: #ccc;
-             text-align: center;
-             padding: 10px 20px;
-         }
- 
-         .toast {
-             position: fixed;
-             top: -100px;
-             right: 20px;
-             display: flex;
-             align-items: center;
-             gap: 12px;
-             padding: 16px 24px;
-             background: #222;
-             border-radius: 8px;
-             opacity: 1;
-             transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-             z-index: 1001;
-             pointer-events: none;
-         }
- 
-         .toast.show {
-             transform: translateY(120px);
-         }
-     </style>
- </head>
- 
- <body>
--    <div class="toast" id="toast">
--        <img src="https://raw.githubusercontent.com/EricbobXD/hub/main/assets/icons/title-tellraw-titleraw.gif" style="height: 64px; width: 64px;" alt="icon">
-+    <div class="toast" id="toast">
-+        <img src="assets/icons/title-tellraw-titleraw.gif" style="height: 64px; width: 64px;" alt="icon">
-         <div class="text">
-             <div style="color: gold;"><strong>Achievement Get!</strong></div>
-             <div style="color: cornflowerblue;"><span>歡迎來到 Eric 的網頁 :D</span></div>
-         </div>
-     </div>
-     <header>
-         <h1>Eric Bob</h1>
-         <nav>
-             <a href="#" onclick="showPage('home');return false;">首頁</a>
-             <a href="#" onclick="showPage('about');return false;">關於我</a>
-             <a href="#" onclick="showPage('portfolio');return false;">作品集</a>
-         </nav>
-     </header>
- 
-     <section id="home" class="hub">
-         <div class="content-container">
-             <div class="intro">
-                 <h1>Eric 的個人網頁:3</h1>
-                 <p>持續更新中...</p>
-                 <div class="buttons">
-                     <a href="#" onclick="showPage('about');return false;">關於我</a>
-                     <a href="#" onclick="showPage('portfolio');return false;">作品集</a>
-                 </div>
-             </div>
-         </div>
-     </section>
- 
-     <section id="about" class="about">
-         <div class="content-container">
-             <div class="about-content">
--                <div class="avatar-box">
--                    <img src="https://raw.githubusercontent.com/EricbobXD/hub/main/assets/profile/profile.png" alt="avatar">
-+                <div class="avatar-box">
-+                    <img src="assets/profile/profile.png" alt="avatar">
-                     <div class="bio-text">
-                         <p>𝕀ℕ𝔽𝕁-𝕋 | 𝐅.𝐄.𝐃</p>
-                         <p>就一個瘋瘋的內耗仔;)</p>
-                         <p>喜歡動手實作一些想法</p>
-                     </div>
-                 </div>
-                 <div class="details-box">
-                     <h2>技能</h2>
-                     <div class="skill-tags">
-                         <span class="skill-tag"><i class="fa-solid fa-file-code"></i> JSON</span>
-                         <span class="skill-tag"><i class="fab fa-python"></i> Python</span>
-                         <span class="skill-tag"><i class="fas fa-code"></i> HTML</span>
-                         <span class="skill-tag"><i class="fab fa-js"></i> JavaScript</span>
-                     </div>
- 
-                     <h2>個人經歷</h2>
-                     <div class="timeline-carousel">
-                         <button class="timeline-nav left" onclick="moveTimeline(-1)">&#9664;</button>
-                         <div class="timeline-track" id="timelineTrack">
-                             <div class="timeline-item">
-                                 <h3><i class="fas fa-book-open"> 程式競賽、程式檢定</i></h3>
-                                 <p>APCS 觀念 2 級 實作 3 級</p>
-                                 <p>114 成大邀請賽 初賽 Rank 6</p>
-                                 <p>114 參加 TOI 初試</p>
-                                 <p>114 參加 CPE 大學程式能力檢定</p>
-@@ -410,106 +405,105 @@
-                                 <p>114 參加 全國自走車競賽</p>
-                                 <p>114 參加 南方創客基地 創客松競賽</p>
-                             </div>
-                             <div class="timeline-item">
-                                 <h3><i class="fas fa-tools"> 參與課程</i></h3>
-                                 <p>112 參加 Minecraft x Python 程式設計課程</p>
-                                 <p>113 參加 人生設計 & 職涯探索課程</p>
-                                 <p>113 參加 學校暑期 C++ 程式設計課程 </p>
-                                 <p>114 參加 【電子系】銘傳大學電機工程學系-高中體驗營</p>
-                                 <p>114 參加 AI Agent 共學實驗室 理論+實作 課程</p>
-                                 <p>114 參加 臺北市政府青年局114年度「青春起航─社團事務培訓營」</p>
-                             </div>
-                             <div class="timeline-item">
-                                 <h3><i class="fa-brands fa-youtube"> Youtube 頻道經營</i></h3>
-                                 <p>總點閱率：11.5 萬</p>
-                                 <p>觀看時數：800+ 小時</p>
-                                 <p>訂閱者數：200+</p>
-                                 <p>頻道連結：https://www.youtube.com/@ericbob_metro</p>
-                             </div>
-                         </div>
-                         <button class="timeline-nav right" onclick="moveTimeline(1)">&#9654;</button>
-                     </div>
- 
-                 </div>
-             </div>
--        </div>
--        </div>
--    </section>
-+        </div>
-+    </section>
- 
-     <section id="portfolio" class="portfolio">
-         <div class="content-container">
-             <h1 style="text-align:center;">作品展示</h1>
-             <div class="web-projects">
-             <a class="portfolio-card" href="https://github.com/EricbobXD/homerun" target="_blank">
-                 <img src="assets/icons/home_run.png" alt="">
-                 <h3>homerun</h3>
-                 <p>仰望盃 專案網站</p>
-             </a>
-             <a class="portfolio-card" href="https://cplusplusblockly-production.up.railway.app/" target="_blank">
-                 <img src="assets/icons/blockly.png" alt="">
-                 <h3>C++ Blockly</h3>
-                 <p>C++ 視覺化程式設計網站</p>
-             </a>
-             <a class="portfolio-card" href="https://ericbobxd.github.io/hub" target="_blank">
-                 <img src="assets/icons/hub.png" alt="">
-                 <h3>Hub</h3>
-                 <p>本網站</p>
-             </a>
-             <a class="portfolio-card" href="https://ericbobxd.github.io/mcpe.cmd-give" target="_blank">
-                 <img src="assets/icons/cmd_give.png" alt="">
-                 <h3>/give 生成器</h3>
-                 <p>基岩版專用的指令生成器</p>
-             </a>
-             <a class="portfolio-card" href="https://ericbobxd.github.io/mcpe.cmd-title-tellraw-titleraw" target="_blank">
-                 <img src="assets/icons/title-tellraw-titleraw.gif" alt="">
-                 <h3>/title /tellraw /titleraw 生成器</h3>
-                 <p>基岩版專用的指令生成器</p>
-             </a>
-             <a class="portfolio-card" href="https://ericbobxd.github.io/UUID-Password" target="_blank">
-                 <img src="assets/icons/UUID-Password.png" alt="">
-                 <h3>UUID/PSD 生成器</h3>
-                 <p>可生成[密碼 / UUID 1 / UUID 4]</p>
-             </a>
-             <a class="portfolio-card" href="https://ericbobxd.github.io/school.clothing_ai_chose" target="_blank">
-                 <img src="assets/icons/cloth_ai_chose.png" alt="">
-                 <h3>智能選衣模擬器</h3>
-                 <p>減少你思考的好東西</p>
-             </a>
-             <a class="portfolio-card" href="https://ericbobxd.github.io/school.meal_order_system" target="_blank">
-                 <img src="assets/icons/meal_order_system.png" alt="">
-                 <h3>點餐系統</h3>
-                 <p>範例，無實際功能</p>
-             </a>
-             <!-- 可繼續增加更多卡片 -->
-             </div>
-         </div>
-     </section>
- 
--    <footer>
--        <p>&copy; 2024 Eric Bob. All Rights Reserved.</p>
--    </footer>
-+    <footer>
-+        <p>&copy; 2026 Eric Bob. All Rights Reserved.</p>
-+    </footer>
- 
-     <script>
-         function showPage(id) {
-             document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-             document.getElementById(id).classList.add('active');
-         }
-         window.addEventListener('DOMContentLoaded', () => {
-             showPage('home');
-             setTimeout(() => {
-                 const t = document.getElementById('toast');
-                 t.classList.add('show');
-                 setTimeout(() => t.classList.remove('show'), 4000);
-             }, 1500);
-         });
- 
-         let currentIndex = 0;
- 
-         function moveTimeline(direction) {
-             const track = document.getElementById("timelineTrack");
-             const items = track.children;
-             const maxIndex = items.length - 1;
-             currentIndex = Math.max(0, Math.min(maxIndex, currentIndex + direction));
-             const offset = currentIndex * 100;
-             track.style.transform = `translateX(-${offset}%)`;
-         };
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Eric Bob｜個人網頁</title>
+    <!-- 必須保留 Google 驗證 -->
+    <meta name="google-site-verification" content="UBSf3peYSCSnzri-tdtLInew5E2Dcq-LVuVIOn-2Z6E">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+            font-family: Arial, sans-serif;
+            background: #121212;
+            color: #eee;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            padding: 0 20px;
+            box-sizing: border-box;
+            z-index: 300;
+        }
+
+        header h1 {
+            font-size: 1.2rem;
+            white-space: nowrap;
+            color: #ccc;
+        }
+
+        nav {
+            display: flex;
+            gap: 12px;
+        }
+
+        nav a {
+            color: #fff;
+            margin: 0 10px;
+            font-size: 1rem;
+            position: relative;
+            transition: color 0.3s;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 100%;
+            height: 2px;
+            background: #fff;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.3s;
+        }
+
+        nav a:hover {
+            color: aquamarine;
+        }
+
+        nav a:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        section {
+            width: 100%;
+            min-height: 100vh;
+            padding-top: 60px;
+            box-sizing: border-box;
+        }
+
+        .content-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.8;
+        }
+
+        .hub,
+        .about,
+        .portfolio {
+            background: #1e1e1e;
+        }
+
+        .hub {
+            display: none;
+        }
+
+        .hub.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .hub .intro {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .hub .intro h1 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+        }
+
+        .hub .intro p {
+            font-size: 1.1rem;
+            color: #ccc;
+        }
+
+        .hub .buttons {
+            margin-top: 30px;
+        }
+
+        .hub .buttons a {
+            background: #444;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 8px;
+            color: #fff;
+            transition: background 0.3s;
+        }
+
+        .hub .buttons a:hover {
+            background: #666;
+            color: rgb(127, 212, 255);
+        }
+
+        .about,
+        .portfolio {
+            display: none;
+        }
+
+        .about.active,
+        .portfolio.active {
+            display: block;
+        }
+
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .avatar-box {
+            flex: 1;
+            text-align: center;
+        }
+
+        .avatar-box img {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            margin-bottom: 10px;
+        }
+
+        .avatar-box p {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #ccc;
+        }
+
+        .avatar-box .bio-text {
+            margin-top: 12px;
+            text-align: left;
+            color: #eee;
+        }
+
+        .details-box {
+            flex: 2;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0 30px;
+        }
+
+        .skill-tag {
+            background: #333;
+            padding: 8px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+
+        .timeline-carousel {
+            position: relative;
+            width: 150%;
+            max-width: 600px;
+            margin: 0 auto;
+            overflow: hidden;
+            background: #1a1a1a;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .timeline-track {
+            padding: 30px;
+            display: flex;
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .timeline-item {
+            flex: 0 0 100%;
+            box-sizing: border-box;
+            padding: 0 50px;
+            text-align: left;
+        }
+
+        .timeline-item h3 {
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .timeline-item h3 i {
+            margin-right: 10px;
+        }
+
+        .timeline-item p {
+            margin: 4px 0;
+            font-size: 1rem;
+            color: #ccc;
+        }
+
+        .timeline-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            background: rgba(0, 0, 0, 0.6);
+            border: none;
+            color: white;
+            padding: 10px 14px;
+            cursor: pointer;
+            z-index: 9999;
+            border-radius: 4px;
+        }
+
+        .timeline-nav.left {
+        left: 0;
+        }
+        .timeline-nav.right {
+        right: 0;
+        }
+
+
+        .web-projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .portfolio-card {
+            background: #2c2c2c;
+            padding: 20px;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+            text-align: center;
+            color: inherit;
+        }
+
+        .portfolio-card:hover {
+            color: rgb(255, 227, 127);
+            transform: scale(1.03);
+        }
+
+        .portfolio-card h3 {
+            margin: 0 0 8px;
+        }
+
+        .portfolio-card p {
+            font-size: 1em;
+        }
+
+        .portfolio-card:hover {
+            transform: scale(1.03);
+            color: rgb(255, 227, 127);
+        }
+
+        .portfolio-card img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background: #333;
+            color: #ccc;
+            text-align: center;
+            padding: 10px 20px;
+        }
+
+        .toast {
+            position: fixed;
+            top: -100px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 24px;
+            background: #222;
+            border-radius: 8px;
+            opacity: 1;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            z-index: 1001;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            transform: translateY(120px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="toast" id="toast">
+        <img src="https://raw.githubusercontent.com/EricbobXD/hub/main/assets/icons/title-tellraw-titleraw.gif" style="height: 64px; width: 64px;" alt="icon">
+        <div class="text">
+            <div style="color: gold;"><strong>Achievement Get!</strong></div>
+            <div style="color: cornflowerblue;"><span>歡迎來到 Eric 的網頁 :D</span></div>
+        </div>
+    </div>
+    <header>
+        <h1>Eric Bob</h1>
+        <nav>
+            <a href="#" onclick="showPage('home');return false;">首頁</a>
+            <a href="#" onclick="showPage('about');return false;">關於我</a>
+            <a href="#" onclick="showPage('portfolio');return false;">作品集</a>
+        </nav>
+    </header>
+
+    <section id="home" class="hub">
+        <div class="content-container">
+            <div class="intro">
+                <h1>Eric 的個人網頁:3</h1>
+                <p>持續更新中...</p>
+                <div class="buttons">
+                    <a href="#" onclick="showPage('about');return false;">關於我</a>
+                    <a href="#" onclick="showPage('portfolio');return false;">作品集</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="content-container">
+            <div class="about-content">
+                <div class="avatar-box">
+                    <img src="https://raw.githubusercontent.com/EricbobXD/hub/main/assets/profile/profile.png" alt="avatar">
+                    <div class="bio-text">
+                        <p>𝕀ℕ𝔽𝕁-𝕋 | 𝐅.𝐄.𝐃</p>
+                        <p>就一個瘋瘋的內耗仔;)</p>
+                        <p>喜歡動手實作一些想法</p>
+                    </div>
+                </div>
+                <div class="details-box">
+                    <h2>技能</h2>
+                    <div class="skill-tags">
+                        <span class="skill-tag"><i class="fa-solid fa-file-code"></i> JSON</span>
+                        <span class="skill-tag"><i class="fab fa-python"></i> Python</span>
+                        <span class="skill-tag"><i class="fas fa-code"></i> HTML</span>
+                        <span class="skill-tag"><i class="fab fa-js"></i> JavaScript</span>
+                    </div>
+
+                    <h2>個人經歷</h2>
+                    <div class="timeline-carousel">
+                        <button class="timeline-nav left" onclick="moveTimeline(-1)">&#9664;</button>
+                        <div class="timeline-track" id="timelineTrack">
+                            <div class="timeline-item">
+                                <h3><i class="fas fa-book-open"> 程式競賽、程式檢定</i></h3>
+                                <p>APCS 觀念 2 級 實作 3 級</p>
+                                <p>114 成大邀請賽 初賽 Rank 6</p>
+                                <p>114 參加 TOI 初試</p>
+                                <p>114 參加 CPE 大學程式能力檢定</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h3><i class="fas fa-trophy"> 其他競賽經歷</i></h3>
+                                <p>113 生科競賽 精品獎 全國第八名</p>
+                                <p>114 仰望盃全國科學 HomeRun 實作大賽 銅牌獎 第六名</p>
+                                <p>114 中學生網站小論文 甲等</p>
+                                <p>114 參加 全國自走車競賽</p>
+                                <p>114 參加 南方創客基地 創客松競賽</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h3><i class="fas fa-tools"> 參與課程</i></h3>
+                                <p>112 參加 Minecraft x Python 程式設計課程</p>
+                                <p>113 參加 人生設計 & 職涯探索課程</p>
+                                <p>113 參加 學校暑期 C++ 程式設計課程 </p>
+                                <p>114 參加 【電子系】銘傳大學電機工程學系-高中體驗營</p>
+                                <p>114 參加 AI Agent 共學實驗室 理論+實作 課程</p>
+                                <p>114 參加 臺北市政府青年局114年度「青春起航─社團事務培訓營」</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h3><i class="fa-brands fa-youtube"> Youtube 頻道經營</i></h3>
+                                <p>總點閱率：11.5 萬</p>
+                                <p>觀看時數：800+ 小時</p>
+                                <p>訂閱者數：200+</p>
+                                <p>頻道連結：https://www.youtube.com/@ericbob_metro</p>
+                            </div>
+                        </div>
+                        <button class="timeline-nav right" onclick="moveTimeline(1)">&#9654;</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <section id="portfolio" class="portfolio">
+        <div class="content-container">
+            <h1 style="text-align:center;">作品展示</h1>
+            <div class="web-projects">
+            <a class="portfolio-card" href="https://github.com/EricbobXD/homerun" target="_blank">
+                <img src="assets/icons/home_run.png" alt="">
+                <h3>homerun</h3>
+                <p>仰望盃 專案網站</p>
+            </a>
+            <a class="portfolio-card" href="https://ericbobxd.github.io/C_plus_plus_Blockly" target="_blank">
+            <a class="portfolio-card" href="https://cplusplusblockly-production.up.railway.app/" target="_blank">
+                <img src="assets/icons/blockly.png" alt="">
+                <h3>C++ Blockly</h3>
+                <p>C++ 視覺化程式設計網站</p>
+            </a>
+            <a class="portfolio-card" href="https://ericbobxd.github.io/hub" target="_blank">
+                <img src="assets/icons/hub.png" alt="">
+                <h3>Hub</h3>
+                <p>本網站</p>
+            </a>
+            <a class="portfolio-card" href="https://ericbobxd.github.io/mcpe.cmd-give" target="_blank">
+                <img src="assets/icons/cmd_give.png" alt="">
+                <h3>/give 生成器</h3>
+                <p>基岩版專用的指令生成器</p>
+            </a>
+            <a class="portfolio-card" href="https://ericbobxd.github.io/mcpe.cmd-title-tellraw-titleraw" target="_blank">
+                <img src="assets/icons/title-tellraw-titleraw.gif" alt="">
+                <h3>/title /tellraw /titleraw 生成器</h3>
+                <p>基岩版專用的指令生成器</p>
+            </a>
+            <a class="portfolio-card" href="https://ericbobxd.github.io/UUID-Password" target="_blank">
+                <img src="assets/icons/UUID-Password.png" alt="">
+                <h3>UUID/PSD 生成器</h3>
+                <p>可生成[密碼 / UUID 1 / UUID 4]</p>
+            </a>
+            <a class="portfolio-card" href="https://ericbobxd.github.io/school.clothing_ai_chose" target="_blank">
+                <img src="assets/icons/cloth_ai_chose.png" alt="">
+                <h3>智能選衣模擬器</h3>
+                <p>減少你思考的好東西</p>
+            </a>
+            <a class="portfolio-card" href="https://ericbobxd.github.io/school.meal_order_system" target="_blank">
+                <img src="assets/icons/meal_order_system.png" alt="">
+                <h3>點餐系統</h3>
+                <p>範例，無實際功能</p>
+            </a>
+            <!-- 可繼續增加更多卡片 -->
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Eric Bob. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        function showPage(id) {
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+        window.addEventListener('DOMContentLoaded', () => {
+            showPage('home');
+            setTimeout(() => {
+                const t = document.getElementById('toast');
+                t.classList.add('show');
+                setTimeout(() => t.classList.remove('show'), 4000);
+            }, 1500);
+        });
+
+        let currentIndex = 0;
+
+        function moveTimeline(direction) {
+            const track = document.getElementById("timelineTrack");
+            const items = track.children;
+            const maxIndex = items.length - 1;
+            currentIndex = Math.max(0, Math.min(maxIndex, currentIndex + direction));
+            const offset = currentIndex * 100;
+            track.style.transform = `translateX(-${offset}%)`;
+        };
+    </script>
+</body>
+
+</html>
