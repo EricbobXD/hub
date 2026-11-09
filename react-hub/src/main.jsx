@@ -12,10 +12,10 @@ import yixuPreview from "./assets/yixu-preview.jpg";
 import "./styles.css";
 
 const pages = [
-  ["home", "首頁"],
-  ["about", "關於我"],
-  ["work", "作品集"],
-  ["contact", "聯絡我"],
+  ["home", "首頁", "M2 7.5 8 2l6 5.5V14H2z M6 14v-4h4v4"],
+  ["about", "關於我", "M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M2.5 14a5.5 4 0 0 1 11 0"],
+  ["work", "作品集", "M2 5h12v9H2z M5 5V2h6v3 M2 9h12 M7 9v2h2V9"],
+  ["contact", "聯絡我", "M2 3.5h12v9H2z M2 4l6 5 6-5"],
 ];
 
 const skills = ["HTML / CSS", "JavaScript", "React", "Python", "Blockly"];
@@ -23,61 +23,114 @@ const githubUrl = "https://github.com/EricbobXD";
 const youtubeUrl = "https://www.youtube.com/@ericbob_metro";
 
 const timeline = [
-  { year: 2023, events: ["參加 Minecraft × Python 程式設計課程"] },
-  { year: 2024, events: ["臺北市 STEAM 跨域龍舟競賽第二名", "台灣仿生設計競賽高中職組全國決賽入選"] },
-  { year: 2025, events: ["仰望盃全國科學 HomeRun 實作大賽銅牌獎、第六名", "參加 TOI 初試", "C++ Blockly 專題獲中學生網站小論文甲等", "完成 AIS3 Juniors 高中職資安課程"] },
+  {
+    year: 2023,
+    events: [
+      "參加 Minecraft × Python 程式設計課程，接觸 Python、JavaScript 與 JSON，從遊戲附加包延伸到網頁工具。",
+      "7 月 28 日建立 Hub 的 GitHub 儲存庫，開始整理個人介紹與網頁作品。",
+    ],
+  },
+  {
+    year: 2024,
+    events: [
+      "教育部第 16 屆生活科技學藝競賽全國第八名。負責初步電路接線、裝置實作與控制程式，開始接觸 Arduino Blockly。",
+      "臺北市 STEAM 跨域龍舟競賽高中職組第二名。擔任隊長、撰寫船隻控制程式，協調分工並處理現場裝置問題。",
+      "台灣仿生設計競賽高中職組全國決賽入選。",
+      "參加暑期 C++ 程式設計課程，練習資料結構、排序，以及 Ubuntu 環境下的命令列與編譯操作。",
+      "在 GitHub 建立 UUID 與密碼生成器、Minecraft /give 與文字指令工具，以及智能衣櫃專案儲存庫。",
+    ],
+  },
+  {
+    year: 2025,
+    events: [
+      "與夥伴開發 C++ Blockly，將積木轉成 C++ 程式碼，並依使用者回饋調整教學與操作介面；專題小論文獲資訊類甲等。",
+      "仰望盃全國科學 HomeRun 實作大賽銅牌獎。團隊製作聲音辨識防詐原型，我負責初版網頁、初步加密程式與裝置動態測試。",
+      "在 WFTRC 擔任 Python 教學長，協助環境安裝、解題及教材編輯；在「IoT 初探：一日速通」活動中排除程式與設備故障，並撰寫課程介紹網頁。",
+      "4 月 11 日建立 3D 模型檢視器的 GitHub 儲存庫，製作能在瀏覽器載入與預覽模型的工具。",
+      "完成 AIS3 Juniors 高中職資安課程，練習 Linux、網頁前後端與 CTF，並與組員研究 Apache HTTP Server Confusion Attacks。",
+      "成大程式設計邀請賽初賽第六名、決賽第二十九名；參加 TOI 初試。APCS 歷次最佳成績為識讀三級、實作三級。",
+      "參加 APCS 模擬測驗團隊 × APCSGuide 暑期營隊，練習枚舉、貪心與排序，取得解題榜第九名與結業證書。",
+      "參加 AI Agent 共學實驗室課程，學習 n8n 工作流，並協助其他學員完成實作。",
+      "勞動部南方創客基地創客自造松競賽晉級決賽。",
+    ],
+  },
+  {
+    year: 2026,
+    events: [
+      "1 月起調整 C++ Blockly 的程式結構與方塊定義，陸續補上函式、容器、位元集合與排序演算法積木。",
+      "1 月 27 日建立程式碼與彩色圖像轉換實驗的 GitHub 儲存庫，嘗試讓文字與圖像互相還原。",
+      "10 月 8 日重置 C++ Blockly 為 Blocksmith C++ Blockly Studio，並建置部署至 GitHub Pages。",
+      "10 月 20 日建立站站練習 Rail Sprint 的 GitHub 儲存庫，用 React 製作台灣鐵道路網填空、最少站數與轉乘挑戰。",
+      "10 月 27–28 日以 React 與 Vite 重製衣序並部署，加入本機衣櫥管理、衣物照片取色與依天氣、場合產生搭配提案的流程。",
+      "11 月重製個人 Hub，融合舊版內容與視覺設計，改用 React 與 Vite；11 月 7 日發布至 GitHub Pages。",
+    ],
+  },
 ];
 
 const projects = [
   {
     id: "rail-sprint",
+    homepage: "https://ericbobxd.github.io/Metro_guest/",
     title: "站站練習 Rail Sprint",
     preview: railMap,
     previewAlt: "站站練習的雙北與桃園路網圖",
     description: "透過站名填空、最少站數和轉乘挑戰熟悉台灣鐵道路網。",
     details: "可拖曳、縮放路線圖。最少站數模式接受等長的最短路徑。",
-    links: [["看 Rail Sprint 原始碼", "https://github.com/EricbobXD/Metro_guest"]],
   },
   {
     id: "yixu",
+    homepage: "https://ericbobxd.github.io/school.clothing_ai_chose/",
     title: "衣序 YIXU",
     icon: clothing,
     cover: yixuPreview,
     previewAlt: "衣序的穿搭設定、指定單品與搭配提案介面",
     description: "管理自己的衣櫥，依天氣、場合和心情取得穿搭提案。",
     details: "源自程式設計課的團隊專題「智能衣櫃」，我負責前端、互動邏輯與資料串接。現在的衣序可框選衣物照片擷取主色，並將衣櫥保存在瀏覽器。",
-    links: [["開啟衣序", "https://ericbobxd.github.io/school.clothing_ai_chose/"]],
   },
   {
     id: "cpp-blockly",
+    homepage: "https://ericbobxd.github.io/C_plus_plus_Blockly/",
     title: "C++ Blockly",
     icon: blockly,
     cover: blocklyEditor,
     previewAlt: "C++ Blockly 編輯器，左側是積木分類，中間是工作區，右側是操作面板",
     description: "和 bosen-you 合作，把 C++ 語法做成可以拖曳組合的積木。",
     details: "我們想讓初學者用熟悉的積木方式練習 C++，因此用 JavaScript 把工作區裡的積木轉成程式碼。收到教學不夠直觀的回饋後，我們調整了操作面板，讓工作區留出更多空間，也改善了教學提示。",
-    links: [["看 C++ Blockly 原始碼", "https://github.com/EricbobXD/C_plus_plus_Blockly"]],
   },
   {
     title: "仰望盃 HomeRun",
     icon: homeRun,
     description: "團隊製作的聲音辨識防詐原型。我負責初版網頁、初步加密程式與裝置動態測試。",
-    links: [["看 HomeRun 專案", "https://github.com/EricbobXD/homerun"]],
   },
   {
     title: "Minecraft 指令工具",
     icon: give,
     description: "為基岩版製作的物品發放及文字顯示指令生成器。",
-    links: [
-      ["開啟 /give 工具", "https://ericbobxd.github.io/mcpe.cmd-give/"],
-      ["開啟文字指令工具", "https://ericbobxd.github.io/mcpe.cmd-title-tellraw-titleraw/"],
-    ],
   },
   {
     title: "UUID 與密碼生成器",
     icon: uuid,
     description: "在瀏覽器裡產生 UUID 或密碼的小工具。",
-    links: [["開啟生成器", "https://ericbobxd.github.io/UUID-Password/"]],
+  },
+  {
+    title: "WFTRC 活動網站",
+    symbol: "WF",
+    description: "介紹社團 IoT 自走車集訓的目的、課程與活動資訊。",
+  },
+  {
+    title: "3D 模型預覽器",
+    symbol: "3D",
+    description: "在瀏覽器中載入與預覽 3D 模型的輕量工具。",
+  },
+  {
+    title: "程式碼與彩色圖像轉換",
+    symbol: "</>",
+    description: "將程式碼轉成彩色圖像，再從圖像還原文字的轉換實驗。",
+  },
+  {
+    title: "校慶訂餐系統",
+    symbol: "食",
+    description: "以校慶訂餐情境設計的選餐介面原型。",
   },
 ];
 
@@ -107,7 +160,7 @@ function Home() {
         <h2 id="home-projects-title">精選作品</h2>
         <div className="grid">
           {featuredProjects.map(project => (
-            <a key={project.id} className="card project-preview" href={`#work/${project.id}`}>
+            <a key={project.id} className="card project-preview" href={project.homepage}>
               <img src={project.preview || project.icon} alt="" />
               <div>
                 <h3>{project.title}</h3>
@@ -159,26 +212,35 @@ function About() {
           </ul>
         </div>
       </article>
-      <article className="card timeline">
-        <h3>教學與社團</h3>
-        <p className="muted">在 WFTRC 擔任 Python 教學長，協助同學處理安裝與解題問題，也參與教材編輯。在「IoT 初探」自走車活動中，我協助排除程式與設備故障，並撰寫課程介紹網頁。</p>
-      </article>
       <Timeline />
     </>
   );
 }
 
 function ProjectCard({ project, featured = false }) {
+  const [dismissed, setDismissed] = useState(false);
+  const Card = featured ? "a" : "article";
+
   return (
-    <article className={featured ? "card project featured-project" : "card project compact-project"} id={project.id} tabIndex={featured ? -1 : undefined}>
+    <Card
+      className={featured ? "card project featured-project" : "card project compact-project"}
+      id={project.id}
+      href={featured ? project.homepage : undefined}
+      onPointerLeave={() => setDismissed(false)}
+      onBlur={() => setDismissed(false)}
+      onKeyDown={event => { if (event.key === "Escape") setDismissed(true); }}
+    >
       {featured
         ? <img className="project-cover" src={project.cover || project.preview || project.icon} alt={project.previewAlt} />
-        : <img className="project-icon" src={project.icon} alt="" />}
+        : project.icon
+          ? <img className="project-icon" src={project.icon} alt="" />
+          : <span className="project-symbol" aria-hidden="true">{project.symbol}</span>}
       <h4>{project.title}</h4>
       <p className="muted">{project.description}</p>
-      {project.details && <details name="project-details"><summary>作品細節</summary><p>{project.details}</p></details>}
-      {project.links.map(([label, href]) => <a key={href} href={href}>{label} ↗</a>)}
-    </article>
+      {project.details && !dismissed && (
+        <p className="project-detail-panel">{project.details}</p>
+      )}
+    </Card>
   );
 }
 
@@ -204,18 +266,7 @@ function Contact() {
     <>
       <p className="eyebrow">CONTACT / 03</p>
       <h2 id="contact-title" tabIndex={-1}>在哪裡找到我</h2>
-      <div className="grid contact-grid">
-        <a className="card contact-card" href={githubUrl}>
-          <h3>GitHub <span aria-hidden="true">↗</span></h3>
-          <p className="muted">看原始碼與專案</p>
-          <p className="handle">EricbobXD</p>
-        </a>
-        <a className="card contact-card" href={youtubeUrl}>
-          <h3>YouTube <span aria-hidden="true">↗</span></h3>
-          <p className="muted">看鐵道影片</p>
-          <p className="handle">@ericbob_metro</p>
-        </a>
-      </div>
+      <p className="coming-soon">即將推出 <span lang="en">Coming Soon</span></p>
     </>
   );
 }
@@ -242,9 +293,6 @@ function App() {
 
   useEffect(() => {
     const project = projectId && document.getElementById(projectId);
-    main.current.querySelectorAll('details[name="project-details"]').forEach(details => {
-      details.open = Boolean(project && project.contains(details));
-    });
     if (project) {
       project.focus({ preventScroll: true });
       project.scrollIntoView({ block: "start" });
@@ -263,8 +311,13 @@ function App() {
         <div className="wrap header-inner">
           <a className="brand" href="#home" ref={brand}><span className="mark" aria-hidden="true">EB</span> Eric Bob</a>
           <nav aria-label="主要導覽">
-            {pages.map(([id, label]) => (
-              <a key={id} href={`#${id}`} aria-current={page === id ? "page" : undefined}>{label}</a>
+            {pages.map(([id, label, icon]) => (
+              <a key={id} href={`#${id}`} aria-current={page === id ? "page" : undefined}>
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinejoin="round" aria-hidden="true">
+                  <path d={icon} />
+                </svg>
+                {label}
+              </a>
             ))}
           </nav>
         </div>
