@@ -5,6 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Eric Bob 的數位空間，收錄個人經歷、互動網頁與程式工具。">
   <title>Eric Bob｜我的數位空間</title>
+  <script>
+    try {
+      document.documentElement.dataset.theme = localStorage.getItem("hub-theme") === "light" ? "light" : "dark";
+    } catch {
+      document.documentElement.dataset.theme = "dark";
+    }
+  </script>
 </head>
 <body>
   <div id="root"></div>

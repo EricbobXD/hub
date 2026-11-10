@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import profile from "./assets/profile.png";
 import clothing from "./assets/cloth_ai_chose.png";
@@ -15,6 +15,8 @@ const pages = [
   ["home", "首頁", "M2 7.5 8 2l6 5.5V14H2z M6 14v-4h4v4"],
   ["about", "關於我", "M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M2.5 14a5.5 4 0 0 1 11 0"],
   ["work", "作品集", "M2 5h12v9H2z M5 5V2h6v3 M2 9h12 M7 9v2h2V9"],
+  ["photography", "攝影", "M1 5h3l1-2h6l1 2h3v9H1z M11 9a3 3 0 1 0-6 0 3 3 0 0 0 6 0"],
+  ["notes", "筆記／實作紀錄", "M3 1h10v14H3z M6 5h4 M6 8h4 M6 11h3"],
   ["contact", "聯絡我", "M2 3.5h12v9H2z M2 4l6 5 6-5"],
 ];
 
@@ -136,7 +138,56 @@ const projects = [
 
 const featuredProjects = projects.filter(project => project.id);
 
-function Home() {
+function FeaturedCarousel({ active }) {
+  const [index, setIndex] = useState(0);
+  const [interacting, setInteracting] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const project = featuredProjects[index];
+
+  useEffect(() => {
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReducedMotion(preference.matches);
+    preference.addEventListener("change", update);
+    return () => preference.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    if (!active || interacting || reducedMotion) return;
+    const interval = setInterval(() => {
+      if (!document.hidden) setIndex(previous => (previous + 1) % featuredProjects.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [active, interacting, reducedMotion, index]);
+
+  return (
+    <div className="featured-carousel" role="region" aria-roledescription="輪播" aria-label="精選作品展示"
+      onMouseEnter={() => setInteracting(true)} onMouseLeave={() => setInteracting(false)}
+      onFocus={() => setInteracting(true)}
+      onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setInteracting(false); }}>
+      <div className="carousel-stage">
+        <button className="carousel-arrow previous" type="button" aria-label="上一件作品" onClick={() => setIndex((index + featuredProjects.length - 1) % featuredProjects.length)}>&lt;</button>
+        <a className="card hero-feature" href={project.homepage}>
+        <div key={project.id} className="carousel-slide">
+          <p className="eyebrow">FEATURED PROJECT · {index + 1} / {featuredProjects.length}</p>
+          <img src={project.cover || project.preview || project.icon} alt={project.previewAlt} width="1280" height="720" />
+          <h2>{project.title} <span aria-hidden="true">↗</span></h2>
+          <p className="muted">{project.description}</p>
+        </div>
+        </a>
+        <button className="carousel-arrow next" type="button" aria-label="下一件作品" onClick={() => setIndex((index + 1) % featuredProjects.length)}>&gt;</button>
+      </div>
+      <div className="carousel-controls">
+        <div className="carousel-dots">
+          {featuredProjects.map((item, position) => (
+            <button key={item.id} type="button" aria-label={`展示${item.title}`} aria-pressed={position === index} onClick={() => setIndex(position)} />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Home({ active }) {
   return (
     <>
       <div className="hero">
@@ -149,13 +200,13 @@ function Home() {
             <a className="button" href="#about">認識我</a>
           </div>
         </div>
-        <a className="card hero-feature" href="#work/rail-sprint">
-          <p className="eyebrow">FEATURED PROJECT</p>
-          <img src={railMap} alt="站站練習的雙北與桃園路網圖，顯示市中心車站與轉乘關係" width="1280" height="720" />
-          <h2>站站練習 Rail Sprint <span aria-hidden="true">↗</span></h2>
-          <p className="muted">用填空與轉乘挑戰熟悉台灣鐵路</p>
-        </a>
+        <FeaturedCarousel active={active} />
       </div>
+      <aside className="card home-announcement" aria-labelledby="announcement-title">
+        <span className="tag" id="announcement-title">公告</span>
+        <p>程式設計筆記已上線，攝影作品準備中。</p>
+        <a href="#notes">閱讀筆記 <span aria-hidden="true">↗</span></a>
+      </aside>
       <section className="home-projects" aria-labelledby="home-projects-title">
         <h2 id="home-projects-title">精選作品</h2>
         <div className="grid">
@@ -178,6 +229,15 @@ function Home() {
 function Timeline() {
   const [selected, setSelected] = useState(timeline.at(-1));
   const { year, events } = selected;
+  const entry = useRef(null);
+  const [height, setHeight] = useState(null);
+
+  useLayoutEffect(() => {
+    const observer = new ResizeObserver(() => setHeight(entry.current.offsetHeight));
+    setHeight(entry.current.offsetHeight);
+    observer.observe(entry.current);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="card timeline">
@@ -189,10 +249,14 @@ function Timeline() {
           ))}
         </div>
       </div>
-      <article id="timeline-events" aria-live="polite">
-        <h4 className="year">{year}</h4>
-        <ul>{events.map(event => <li key={event}>{event}</li>)}</ul>
-      </article>
+      <div className="timeline-viewport" style={{ height: height ?? "auto" }}>
+        <article id="timeline-events" ref={entry} aria-live="polite">
+          <div key={year} className="timeline-entry">
+            <h4 className="year">{year}</h4>
+            <ul>{events.map(event => <li key={event}>{event}</li>)}</ul>
+          </div>
+        </article>
+      </div>
     </div>
   );
 }
@@ -238,7 +302,10 @@ function ProjectCard({ project, featured = false }) {
       <h4>{project.title}</h4>
       <p className="muted">{project.description}</p>
       {project.details && !dismissed && (
-        <p className="project-detail-panel">{project.details}</p>
+        <div className="project-detail-panel">
+          <strong>{project.title}</strong>
+          <p>{project.details}</p>
+        </div>
       )}
     </Card>
   );
@@ -261,19 +328,196 @@ function Work() {
   );
 }
 
-function Contact() {
+function Photography() {
   return (
     <>
-      <p className="eyebrow">CONTACT / 03</p>
-      <h2 id="contact-title" tabIndex={-1}>在哪裡找到我</h2>
-      <p className="coming-soon">即將推出 <span lang="en">Coming Soon</span></p>
+      <p className="eyebrow">PHOTOGRAPHY / 03</p>
+      <h2 id="photography-title" tabIndex={-1}>攝影作品</h2>
+        <div className="card photography-placeholder">
+          <svg viewBox="0 0 32 32" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+            <path d="M4 9h6l2-4h8l2 4h6v18H4z" />
+            <circle cx="16" cy="18" r="6" />
+          </svg>
+          <p>即將到來</p>
+          <span lang="en">Coming Soon</span>
+        </div>
     </>
   );
 }
 
-const content = { home: Home, about: About, work: Work, contact: Contact };
+const notes = [
+  {
+    id: "BkIewSbjlg",
+    title: "程式設計筆記總覽",
+    label: "START HERE",
+    status: "系列目錄",
+    description: "從這裡開始，查看各語言的教學順序、筆記連結與編寫進度。",
+  },
+  {
+    id: "B1C79whdxe",
+    title: "JSON 教學筆記",
+    label: "JSON",
+    status: "已發布",
+    description: "認識鍵值對、資料型態與格式限制，搭配範例練習 JSON.parse() 和 JSON.stringify()。",
+  },
+  {
+    id: "rkIi-ztwgl",
+    title: "Python 基礎教學",
+    label: "PYTHON / BASIC",
+    status: "已發布",
+    description: "從環境安裝、輸入輸出開始，逐步認識變數、資料型態、型態轉換與運算子。",
+  },
+  {
+    id: "r1Nr-PO5xx",
+    title: "Java 教學",
+    label: "JAVA",
+    status: "持續編寫",
+    description: "整理開發環境、主程式架構、輸出方式與資料型態，搭配程式範例理解基本語法。",
+  },
+  {
+    id: "S1H3_GKPge",
+    title: "C++ 教學",
+    label: "C++",
+    status: "內容整理中",
+    description: "程式設計筆記系列的 C++ 篇，後續內容將在 HackMD 更新。",
+  },
+];
+
+function Notes() {
+  return (
+    <>
+      <p className="eyebrow">NOTES / 04</p>
+      <h2 id="notes-title" tabIndex={-1}>筆記／實作紀錄</h2>
+      <p className="notes-intro muted">把學習過程整理成可以回頭查閱的教學筆記，從語法概念到實際範例。</p>
+      <section className="notes-category" aria-labelledby="programming-notes-title">
+        <h3 id="programming-notes-title">程式設計</h3>
+      <div className="grid notes-grid">
+        {notes.map(note => (
+          <a key={note.id} className="card note-card" href={`https://hackmd.io/@Coderex-bob/${note.id}`}>
+            <div className="note-meta"><span>{note.label}</span><span className="tag">{note.status}</span></div>
+            <h4>{note.title}</h4>
+            <p className="muted">{note.description}</p>
+            <span className="note-read">在 HackMD 閱讀 <span aria-hidden="true">↗</span></span>
+          </a>
+        ))}
+        {["C", "Lua", "Rust", "Ruby"].map(language => (
+          <article key={language} className="card note-card note-upcoming">
+            <div className="note-meta"><span>{language.toUpperCase()}</span><span className="tag">即將到來</span></div>
+            <h4>{language} 教學筆記</h4>
+            <p className="muted">內容準備中</p>
+            <span className="note-read" lang="en">Coming Soon</span>
+          </article>
+        ))}
+      </div>
+      </section>
+    </>
+  );
+}
+
+function Contact() {
+  return (
+    <>
+      <p className="eyebrow">CONTACT / 05</p>
+      <h2 id="contact-title" tabIndex={-1}>在哪裡找到我</h2>
+      <div className="grid social-grid">
+        <article className="card social-card">
+          <span className="social-symbol" aria-hidden="true">DC</span>
+          <h3>Discord</h3>
+          <p className="muted">coderex._.bob</p>
+        </article>
+        <a className="card social-card" href="https://www.instagram.com/coderex._.bob/">
+          <span className="social-symbol" aria-hidden="true">IG</span>
+          <h3>Instagram</h3>
+          <p className="muted">@coderex._.bob</p>
+        </a>
+        <a className="card social-card" href={youtubeUrl}>
+          <span className="social-symbol" aria-hidden="true">YT</span>
+          <h3>YouTube</h3>
+          <p className="muted">鐵道影片 · @ericbob_metro</p>
+        </a>
+        <a className="card social-card" href={githubUrl}>
+          <span className="social-symbol" aria-hidden="true">GH</span>
+          <h3>GitHub</h3>
+          <p className="muted">原始碼與專案 · EricbobXD</p>
+        </a>
+      </div>
+      <section className="card feedback-placeholder" aria-labelledby="feedback-title">
+        <h3 id="feedback-title">匿名回饋</h3>
+        <p className="muted">回饋管道準備中，開放後可以在這裡分享網站建議。</p>
+        <span className="tag">準備中</span>
+      </section>
+    </>
+  );
+}
+
+const content = { home: Home, about: About, work: Work, photography: Photography, notes: Notes, contact: Contact };
+
+const backgroundSnippets = [
+  ["C", "int square(int n) { return n * n; }"],
+  ["C++", "#include <array>\nstd::array<int, 3> stops{1, 2, 3};"],
+  ["Rust", "fn square(n: i32) -> i32 { n * n }"],
+  ["Ruby", "stations = %w[Taipei Banqiao Taoyuan]"],
+  ["Java", "class Square {\n  static int of(int n) { return n * n; }\n}"],
+  ["JavaScript", "const explore = () => 'Hello, world!';"],
+  ["C#", "int Square(int n) => n * n;"],
+  ["Python", "def square(n):\n    return n * n"],
+  ["JSON", '{ "theme": "cyan", "ready": true }'],
+  ["YAML", "project: hub\nfeatures:\n  - photography\n  - notes"],
+  ["XML", '<project name="Hub"><status>ready</status></project>'],
+  ["HTML", '<main><h1>Hello, world!</h1></main>'],
+  ["CSS", ".card { border-radius: 1rem; }"],
+  ["Go", "package main\nfunc square(n int) int { return n * n }"],
+].concat([
+  "{ }",
+  "</>",
+  "◇",
+].map(symbol => ["", symbol]));
+
+function BackgroundAccents() {
+  const [accents, setAccents] = useState([]);
+
+  useEffect(() => {
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let interval;
+    let batch = 0;
+    function updateMotion() {
+      clearInterval(interval);
+      setAccents([]);
+      if (preference.matches) return;
+      interval = setInterval(() => {
+        if (document.hidden) return;
+        const additions = Array.from({ length: 1 + batch++ % 2 }, (_, i) => ({
+          id: `${Date.now()}-${i}`,
+          snippet: backgroundSnippets[Math.floor(Math.random() * backgroundSnippets.length)],
+          left: 3 + Math.random() * 60,
+          top: 15 + Math.random() * 65,
+        }));
+        setAccents(previous => [...previous, ...additions].slice(-6));
+      }, 14000 / 1.5);
+    }
+    updateMotion();
+    preference.addEventListener("change", updateMotion);
+    return () => {
+      clearInterval(interval);
+      preference.removeEventListener("change", updateMotion);
+    };
+  }, []);
+
+  return (
+    <div className="background-accents" aria-hidden="true">
+      {accents.map(accent => (
+        <code key={accent.id} style={{ left: `${accent.left}%`, top: `${accent.top}%` }}
+          onAnimationEnd={() => setAccents(previous => previous.filter(item => item.id !== accent.id))}>
+          {accent.snippet[0] && <span>{accent.snippet[0]}</span>}
+          {accent.snippet[1]}
+        </code>
+      ))}
+    </div>
+  );
+}
 
 function App() {
+  const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || "dark");
   const [hash, setHash] = useState(() => window.location.hash);
   const main = useRef(null);
   const brand = useRef(null);
@@ -281,6 +525,15 @@ function App() {
   const [requestedPage, requestedProject] = hash.slice(1).split("/");
   const page = pages.some(([id]) => id === requestedPage) ? requestedPage : "home";
   const projectId = page === "work" && featuredProjects.find(project => project.id === requestedProject)?.id;
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try {
+      localStorage.setItem("hub-theme", theme);
+    } catch {
+      // Theme switching remains available when browser storage is disabled.
+    }
+  }, [theme]);
 
   useEffect(() => {
     function onHashChange() {
@@ -307,6 +560,7 @@ function App() {
 
   return (
     <>
+      <BackgroundAccents />
       <header>
         <div className="wrap header-inner">
           <a className="brand" href="#home" ref={brand}><span className="mark" aria-hidden="true">EB</span> Eric Bob</a>
@@ -320,20 +574,30 @@ function App() {
               </a>
             ))}
           </nav>
+          <button
+            className="theme-toggle"
+            type="button"
+            aria-label={theme === "dark" ? "切換至淺色模式" : "切換至深色模式"}
+            aria-pressed={theme === "light"}
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          >
+            <span aria-hidden="true">{theme === "dark" ? "☀" : "☾"}</span>
+            {theme === "dark" ? "淺色" : "深色"}
+          </button>
         </div>
       </header>
       <main className="wrap" ref={main}>
         {pages.map(([id]) => {
           const Page = content[id];
-          return <section key={id} id={id} aria-labelledby={`${id}-title`} hidden={page !== id}><Page /></section>;
+          return <section key={id} id={id} aria-labelledby={`${id}-title`} hidden={page !== id}><Page active={page === id} /></section>;
         })}
       </main>
       <footer>
         <div className="wrap footer-inner">
-          <p><strong>Eric Bob</strong> · 個人作品集</p>
+          <p className="footer-credit"><strong>Eric Bob</strong><span>個人作品集</span></p>
           <div className="footer-links">
-            <a href={githubUrl}>GitHub</a>
-            <a href={youtubeUrl}>YouTube</a>
+            <a href={githubUrl}>GitHub <span aria-hidden="true">↗</span></a>
+            <a href={youtubeUrl}>YouTube <span aria-hidden="true">↗</span></a>
             <button type="button" onClick={() => {
               window.scrollTo(0, 0);
               brand.current.focus({ preventScroll: true });
